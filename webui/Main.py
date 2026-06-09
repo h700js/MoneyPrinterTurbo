@@ -42,6 +42,24 @@ st.set_page_config(
 )
 
 
+# Add Sales Letter link in sidebar
+with st.sidebar:
+    st.markdown("---")
+    st.markdown(
+        "### 📖 Info",
+        unsafe_allow_html=True
+    )
+    st.markdown(
+        '<a href="http://127.0.0.1:8081/sales-letter.html" target="_blank" style="text-decoration:none; color:#00d2ff;">'
+        '📈 Sales Letter</a>',
+        unsafe_allow_html=True,
+    )
+    st.markdown(
+        '<a href="https://github.com/harry0703/MoneyPrinterTurbo" target="_blank" style="text-decoration:none; color:#999;">'
+        '🔗 GitHub</a>',
+        unsafe_allow_html=True,
+    )
+
 streamlit_style = """
 <style>
 h1 {
@@ -558,9 +576,11 @@ if not config.app.get("hide_config", False):
                 st.info(tips)
 
             st_llm_api_key = st.text_input(
-                tr("API Key"), value=llm_api_key, type="password"
+                tr("API Key"), value=llm_api_key, type="password",
+                placeholder="e.g. sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
             )
-            st_llm_base_url = st.text_input(tr("Base Url"), value=llm_base_url)
+            st_llm_base_url = st.text_input(tr("Base Url"), value=llm_base_url,
+                placeholder="e.g. https://api.openai.com/v1  (leave blank for default)")
             st_llm_model_name = ""
             if llm_provider != "ernie":
                 if llm_provider == "groq":
@@ -586,6 +606,7 @@ if not config.app.get("hide_config", False):
                         st_llm_model_name = st.text_input(
                             tr("Model Name"),
                             value=llm_model_name,
+                            placeholder="e.g. llama-3.3-70b-versatile",
                             key="groq_model_name_input",
                         )
                         if effective_api_key:
@@ -600,6 +621,7 @@ if not config.app.get("hide_config", False):
                     st_llm_model_name = st.text_input(
                         tr("Model Name"),
                         value=llm_model_name,
+                        placeholder="e.g. gpt-4o, gpt-3.5-turbo, deepseek-chat",
                         key=f"{llm_provider}_model_name_input",
                     )
                 if st_llm_model_name:
@@ -615,13 +637,15 @@ if not config.app.get("hide_config", False):
                 config.app[f"{llm_provider}_model_name"] = st_llm_model_name
             if llm_provider == "ernie":
                 st_llm_secret_key = st.text_input(
-                    tr("Secret Key"), value=llm_secret_key, type="password"
+                    tr("Secret Key"), value=llm_secret_key, type="password",
+                    placeholder="e.g. your-ernie-secret-key"
                 )
                 config.app[f"{llm_provider}_secret_key"] = st_llm_secret_key
 
             if llm_provider == "cloudflare":
                 st_llm_account_id = st.text_input(
-                    tr("Account ID"), value=llm_account_id
+                    tr("Account ID"), value=llm_account_id,
+                    placeholder="e.g. your-cloudflare-account-id"
                 )
                 if st_llm_account_id:
                     config.app[f"{llm_provider}_account_id"] = st_llm_account_id
@@ -645,13 +669,15 @@ if not config.app.get("hide_config", False):
 
             pexels_api_key = get_keys_from_config("pexels_api_keys")
             pexels_api_key = st.text_input(
-                tr("Pexels API Key"), value=pexels_api_key, type="password"
+                tr("Pexels API Key"), value=pexels_api_key, type="password",
+                placeholder="e.g. abc123def456...  (get from https://www.pexels.com/api/)"
             )
             save_keys_to_config("pexels_api_keys", pexels_api_key)
 
             pixabay_api_key = get_keys_from_config("pixabay_api_keys")
             pixabay_api_key = st.text_input(
-                tr("Pixabay API Key"), value=pixabay_api_key, type="password"
+                tr("Pixabay API Key"), value=pixabay_api_key, type="password",
+                placeholder="e.g. 12345678-abc123def456...  (get from https://pixabay.com/api/docs/)"
             )
             save_keys_to_config("pixabay_api_keys", pixabay_api_key)
 
@@ -671,6 +697,7 @@ with left_panel:
         params.video_subject = st.text_input(
             tr("Video Subject"),
             key="video_subject",
+            placeholder="e.g. Top 10 AI Tools 2026, How to bake a chocolate cake, Crypto News Today",
         ).strip()
 
         video_languages = [
@@ -744,7 +771,8 @@ with left_panel:
                     st.session_state["video_script"] = script
                     st.session_state["video_terms"] = ", ".join(terms)
         params.video_script = st.text_area(
-            tr("Video Script"), value=st.session_state["video_script"], height=280
+            tr("Video Script"), value=st.session_state["video_script"], height=280,
+            placeholder="AI will auto-generate the script based on your subject. Or you can write your own script here.\n\n💡 Example:\nArtificial Intelligence is changing the world faster than ever before. From ChatGPT to Midjourney, AI tools are revolutionizing how we work and create. In this video, we'll explore the top 10 AI tools you need to know in 2026..."
         )
         if st.button(tr("Generate Video Keywords"), key="auto_generate_terms"):
             if not params.video_script:

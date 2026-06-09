@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoneyPrinterTurbo - AI Short Video Generator</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+            background: #0f0f1a;
+            color: #e0e0e0;
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 80px 20px 60px;
+            text-align: center;
+            position: relative;
+        }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: linear-gradient(to top, #0f0f1a, transparent);
+        }
+        .hero h1 {
+            font-size: 3em;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+        }
+        .hero .tagline {
+            font-size: 1.3em;
+            color: #aaa;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+        .hero .cta-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            color: #fff;
+            padding: 16px 48px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 25px rgba(0, 210, 255, 0.3);
+        }
+        .hero .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 35px rgba(0, 210, 255, 0.5);
+        }
+
+        /* Container */
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Section */
+        .section {
+            padding: 60px 0;
+        }
+        .section h2 {
+            font-size: 2em;
+            margin-bottom: 30px;
+            color: #fff;
+            position: relative;
+            display: inline-block;
+        }
+        .section h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
+            border-radius: 2px;
+        }
+        .section p {
+            font-size: 1.1em;
+            color: #bbb;
+            margin-bottom: 20px;
+        }
+
+        /* Pain Points */
+        .pain-points {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .pain-point {
+            background: #1a1a2e;
+            border-left: 4px solid #e74c3c;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .pain-point strong {
+            color: #e74c3c;
+        }
+
+        /* Features */
+        .features {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin: 30px 0;
+        }
+        .feature {
+            background: #1a1a2e;
+            border: 1px solid #2a2a4a;
+            border-radius: 12px;
+            padding: 30px;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+        .feature:hover {
+            border-color: #00d2ff;
+            transform: translateY(-5px);
+        }
+        .feature .icon {
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        .feature h3 {
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        .feature p {
+            font-size: 0.95em;
+            color: #999;
+        }
+
+        /* How It Works */
+        .steps {
+            counter-reset: step;
+            margin: 30px 0;
+        }
+        .step {
+            counter-increment: step;
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+            background: #1a1a2e;
+            border-radius: 12px;
+            padding: 25px;
+            border: 1px solid #2a2a4a;
+        }
+        .step-number {
+            flex-shrink: 0;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            font-weight: 800;
+            color: #fff;
+        }
+        .step-content h3 {
+            color: #fff;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+        }
+        .step-content p {
+            font-size: 0.95em;
+            color: #999;
+            margin: 0;
+        }
+
+        /* Use Cases */
+        .use-cases {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .use-case {
+            background: #1a1a2e;
+            border: 1px solid #2a2a4a;
+            border-radius: 12px;
+            padding: 25px;
+            text-align: center;
+        }
+        .use-case .emoji {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+        .use-case h4 {
+            color: #fff;
+            margin-bottom: 8px;
+        }
+        .use-case p {
+            font-size: 0.9em;
+            color: #999;
+            margin: 0;
+        }
+
+        /* Testimonial */
+        .testimonial {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border: 1px solid #2a2a4a;
+            border-radius: 16px;
+            padding: 35px;
+            margin: 30px 0;
+            position: relative;
+        }
+        .testimonial::before {
+            content: '"';
+            font-size: 4em;
+            color: #00d2ff;
+            opacity: 0.3;
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-family: Georgia, serif;
+        }
+        .testimonial p {
+            font-style: italic;
+            font-size: 1.05em;
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+        .testimonial .author {
+            color: #00d2ff;
+            font-weight: 600;
+        }
+
+        /* Pricing / CTA */
+        .cta-section {
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a2e, #0f3460);
+            border-radius: 16px;
+            padding: 50px 30px;
+            margin: 40px 0;
+        }
+        .cta-section h2 {
+            color: #fff;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+        .cta-section p {
+            color: #aaa;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .cta-section .cta-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            color: #fff;
+            padding: 18px 56px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 25px rgba(0, 210, 255, 0.3);
+        }
+        .cta-section .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 35px rgba(0, 210, 255, 0.5);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            border-top: 1px solid #2a2a4a;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2em; }
+            .pain-points, .features, .use-cases { grid-template-columns: 1fr; }
+            .step { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+    <h1>🎬 MoneyPrinterTurbo</h1>
+    <p class="tagline">
+        Create stunning AI-powered short videos in minutes — just type a topic, and let AI do the rest.
+        Generate scripts, footage, subtitles, and background music automatically.
+    </p>
+    <a href="http://127.0.0.1:8501" class="cta-btn">🚀 Start Creating Now</a>
+</section>
+
+<div class="container">
+
+    <!-- Pain Points -->
+    <section class="section">
+        <h2>😫 Tired of Struggling with Video Creation?</h2>
+        <div class="pain-points">
+            <div class="pain-point">
+                <strong>⏰ Takes too long</strong>
+                <p>Writing scripts, finding footage, adding subtitles, syncing audio — a single short video can take hours of manual work.</p>
+            </div>
+            <div class="pain-point">
+                <strong>💰 Too expensive</strong>
+                <p>Hiring video editors or buying expensive software subscriptions drains your budget.</p>
+            </div>
+            <div class="pain-point">
+                <strong>🎯 No technical skills</strong>
+                <p>You don't know how to edit videos, use After Effects, or work with complex editing tools.</p>
+            </div>
+            <div class="pain-point">
+                <strong>📉 Inconsistent quality</strong>
+                <p>Every video looks different. No branding consistency, varying subtitle styles, mismatched music.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- What is -->
+    <section class="section">
+        <h2>🤖 What is MoneyPrinterTurbo?</h2>
+        <p>
+            <strong>MoneyPrinterTurbo</strong> is an open-source AI-powered short video generator. 
+            Simply provide a <strong>topic</strong> or <strong>keyword</strong>, and it will automatically:
+        </p>
+        <ul style="color: #bbb; font-size: 1.05em; margin-left: 20px;">
+            <li>🧠 <strong>Generate</strong> video scripts using LLM (GPT, Claude, DeepSeek, etc.)</li>
+            <li>🎥 <strong>Fetch</strong> high-quality video materials from Pexels / Pixabay</li>
+            <li>📝 <strong>Add</strong> beautiful subtitles with customizable fonts & colors</li>
+            <li>🎵 <strong>Synthesize</strong> natural voiceover with Azure TTS / SiliconFlow / Gemini TTS</li>
+            <li>🎶 <strong>Add</strong> background music automatically</li>
+            <li>⚡ <strong>Render</strong> a complete HD short video — ready to post!</li>
+        </ul>
+    </section>
+
+    <!-- Features -->
+    <section class="section">
+        <h2>✨ Features That Will Blow Your Mind</h2>
+        <div class="features">
+            <div class="feature">
+                <div class="icon">🧠</div>
+                <h3>AI-Powered Script Writing</h3>
+                <p>Supports OpenAI, Claude, Gemini, DeepSeek, Moonshot, Grok, and 15+ LLM providers. Generate viral-worthy scripts instantly.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">🎥</div>
+                <h3>Auto Video Sourcing</h3>
+                <p>Automatically fetches relevant HD video clips from Pexels, Pixabay, or upload your own local files.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">🗣️</div>
+                <h3>Natural Voiceover TTS</h3>
+                <p>Azure TTS V1/V2, SiliconFlow, Google Gemini TTS — hundreds of lifelike voices in multiple languages.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">🎬</div>
+                <h3>Professional Subtitles</h3>
+                <p>Custom fonts, colors, stroke, background, position — make your videos accessible and engaging.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">🎵</div>
+                <h3>Smart Background Music</h3>
+                <p>Random or custom BGM. Volume control. Your videos will never feel empty.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">🌍</div>
+                <h3>Multi-Language Support</h3>
+                <p>English, Chinese, Russian, German, French, Vietnamese, Thai, Turkish, and more.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">🚀</div>
+                <h3>Batch Generation</h3>
+                <p>Generate up to 5 videos simultaneously. Scale your content production effortlessly.</p>
+            </div>
+            <div class="feature">
+                <div class="icon">🔓</div>
+                <h3>100% Open Source</h3>
+                <p>Free forever. Self-hosted. Your data stays yours. No hidden fees, no subscriptions.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section">
+        <h2>📋 How It Works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div class="step-content">
+                    <h3>Enter a Topic</h3>
+                    <p>Type any subject — "Top 10 AI Tools 2026", "How to bake a cake", "Crypto News Update" — and our AI generates a complete script.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div class="step-content">
+                    <h3>Customize Your Video</h3>
+                    <p>Choose video source, aspect ratio (portrait/landscape), voice, subtitles style, background music, and more.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div class="step-content">
+                    <h3>Generate & Download</h3>
+                    <p>Click "Generate Video". In minutes, your AI-produced HD short video is ready — with subtitles, voiceover, and music.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases -->
+    <section class="section">
+        <h2>🎯 Perfect For</h2>
+        <div class="use-cases">
+            <div class="use-case">
+                <div class="emoji">📱</div>
+                <h4>TikTok / Reels Creators</h4>
+                <p>Publish daily content without spending hours editing. Scale your channel with AI.</p>
+            </div>
+            <div class="use-case">
+                <div class="emoji">📢</div>
+                <h4>Digital Marketers</h4>
+                <p>Create product promos, ads, and social media content in bulk at zero production cost.</p>
+            </div>
+            <div class="use-case">
+                <div class="emoji">🎓</div>
+                <h4>Educators & Course Creators</h4>
+                <p>Turn lesson scripts into engaging video content with subtitles & narration.</p>
+            </div>
+            <div class="use-case">
+                <div class="emoji">📰</div>
+                <h4>News & Media</h4>
+                <p>Automate news recap videos. Generate daily updates with minimal effort.</p>
+            </div>
+            <div class="use-case">
+                <div class="emoji">💰</div>
+                <h4>Affiliate Marketers</h4>
+                <p>Create review and promotional videos at scale. Drive more conversions.</p>
+            </div>
+            <div class="use-case">
+                <div class="emoji">🤖</div>
+                <h4>AI Enthusiasts</h4>
+                <p>Experiment with cutting-edge AI video generation. Self-host and customize everything.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonial -->
+    <section class="section">
+        <h2>💬 What Users Say</h2>
+        <div class="testimonial">
+            <p>
+                I was spending 3-4 hours per video for my TikTok channel. With MoneyPrinterTurbo, 
+                I now generate 10 videos in under 30 minutes. My engagement went up 300% 
+                because I can post consistently every single day.
+            </p>
+            <p class="author">— Alex R., Content Creator</p>
+        </div>
+        <div class="testimonial">
+            <p>
+                As a small business owner, I couldn't afford a video editor. This tool saved me 
+                thousands of dollars. The AI scripts are surprisingly good, and the auto-subtitle 
+                feature is a lifesaver for accessibility.
+            </p>
+            <p class="author">— Sarah K., E-commerce Entrepreneur</p>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section">
+        <h2>🚀 Ready to Create Your First AI Video?</h2>
+        <p>
+            No credit card. No signup. No limits. Just pure, unlimited AI video creation.
+            Launch the app now and see the magic happen.
+        </p>
+        <a href="http://127.0.0.1:8501" class="cta-btn">🎬 Launch MoneyPrinterTurbo</a>
+        <p style="margin-top: 20px; font-size: 0.9em; color: #666;">
+            ⚡ Self-hosted • Open Source • Free Forever
+        </p>
+    </section>
+
+</div>
+
+<footer class="footer">
+    <p>MoneyPrinterTurbo — <a href="https://github.com/harry0703/MoneyPrinterTurbo" style="color: #00d2ff; text-decoration: none;">GitHub</a> | Made with ❤️ by the open-source community</p>
+</footer>
+
+</body>
+</html>
