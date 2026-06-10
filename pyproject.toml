@@ -6,9 +6,9 @@ requires = ["hatchling>=1.27.0"]
 build-backend = "hatchling.build"
 
 [project]
-name = "moneyprinterturbo"
+name = "kreator-ai"
 version = "1.2.9"
-description = "Generate short videos from prompts, local assets, subtitles, and TTS."
+description = "AI-powered short video generator, local assets, subtitles, and TTS."
 readme = "README-en.md"
 requires-python = ">=3.11,<3.13"
 license = { text = "MIT" }

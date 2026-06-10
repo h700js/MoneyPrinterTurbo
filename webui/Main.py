@@ -28,27 +28,98 @@ from app.services import task as tm
 from app.utils import utils
 
 st.set_page_config(
-    page_title="MoneyPrinterTurbo",
+    page_title="Kreator AI",
     page_icon="🤖",
     layout="wide",
-    initial_sidebar_state="auto",
+    initial_sidebar_state="collapsed",
     menu_items={
-        "Report a bug": "https://github.com/harry0703/MoneyPrinterTurbo/issues",
-        "About": "# MoneyPrinterTurbo\nSimply provide a topic or keyword for a video, and it will "
-        "automatically generate the video copy, video materials, video subtitles, "
-        "and video background music before synthesizing a high-definition short "
-        "video.\n\nhttps://github.com/harry0703/MoneyPrinterTurbo",
+        "About": "# Kreator AI\nAI-powered short video generator. Type a topic, get a complete video with script, footage, subtitles, and music in minutes.",
     },
 )
 
+
+# --- localStorage sync for API keys ---
+# API keys are stored ONLY in browser localStorage (never sent to server except during use).
+# st.session_state holds them per-session, localStorage persists across refreshes.
+# On page load: load from localStorage into session_state.
+# On change: save to both session_state and localStorage.
+
+# Helper: generic key getter/setter that syncs with localStorage
+def _ls_key(name):
+    return f"ka_{name}"
+
+def get_user_key(name, default=""):
+    """Get API key from session state (loaded from localStorage on page load)"""
+    return st.session_state.get(_ls_key(name), default)
+
+def set_user_key(name, value):
+    """Set API key in session state AND localStorage"""
+    key = _ls_key(name)
+    st.session_state[key] = value
+    # Persist to browser localStorage via JS injection
+    if value:
+        js = f'<script>try{{localStorage.setItem("{key}","{value}")}}catch(e){{}}</script>'
+    else:
+        js = f'<script>try{{localStorage.removeItem("{key}")}}catch(e){{}}</script>'
+    st.components.v1.html(js, height=0, width=0)
+
+# On initial page load, try to load keys from localStorage into session_state
+if "_ls_init" not in st.session_state:
+    st.session_state["_ls_init"] = True
+    # Inject JS that checks localStorage and triggers a reload with data in URL hash
+    # This is a one-time sync on first page visit
+    ls_init_html = """
+    <script>
+    if (!window._lsSynced) {
+        window._lsSynced = true;
+        let data = {};
+        for (let i = 0; i < localStorage.length; i++) {
+            const k = localStorage.key(i);
+            if (k && k.startsWith('ka_')) { data[k] = localStorage.getItem(k); }
+        }
+        if (Object.keys(data).length > 0) {
+            const hash = encodeURIComponent(JSON.stringify(data));
+            if (location.hash !== '#ls=' + hash) {
+                location.hash = 'ls=' + hash;
+                location.reload();
+            }
+        }
+    }
+    // If hash contains ls data, pass it to Streamlit via parent frame messaging
+    if (location.hash.startsWith('#ls=')) {
+        try {
+            const raw = decodeURIComponent(location.hash.substring(4));
+            const data = JSON.parse(raw);
+            // Store in sessionStorage as fallback for Streamlit to read
+            for (const [k, v] of Object.entries(data)) {
+                sessionStorage.setItem(k, v);
+            }
+        } catch(e) {}
+    }
+    </script>
+    """
+    st.components.v1.html(ls_init_html, height=0, width=0)
 
 # Add Sales Letter link in sidebar
 with st.sidebar:
     st.markdown("---")
     st.markdown(
-        "### 📖 Info",
+        "### 🎛️ Mode",
         unsafe_allow_html=True
     )
+    if "ui_mode" not in st.session_state:
+        st.session_state["ui_mode"] = "simple"
+    ui_mode = st.radio(
+        "Pilih tampilan:",
+        ["🚀 Simple (Pemula)", "🔧 Advanced (Lengkap)"],
+        index=0 if st.session_state["ui_mode"] == "simple" else 1,
+        label_visibility="collapsed",
+        key="ui_mode_radio",
+    )
+    st.session_state["ui_mode"] = "simple" if "Simple" in ui_mode else "advanced"
+
+    st.markdown("---")
+    st.markdown("### 📖 Info")
     st.markdown(
         '<a href="http://127.0.0.1:8081/guide.html" target="_blank" style="text-decoration:none; color:#4ade80;">'
         '📖 Guide</a>',
@@ -59,11 +130,18 @@ with st.sidebar:
         '📈 Sales Letter</a>',
         unsafe_allow_html=True,
     )
-    st.markdown(
-        '<a href="https://github.com/harry0703/MoneyPrinterTurbo" target="_blank" style="text-decoration:none; color:#999;">'
-        '🔗 GitHub</a>',
-        unsafe_allow_html=True,
-    )
+
+    # --- Riwayat Video ---
+    st.markdown("---")
+    st.markdown("### 🎬 Riwayat Video")
+    if "video_history" in st.session_state and st.session_state["video_history"]:
+        history = st.session_state["video_history"][-10:]  # Last 10 videos
+        for i, item in enumerate(reversed(history)):
+            st.caption(f"**{item['subject'][:40]}**")
+            for v_url in item.get("urls", []):
+                st.video(v_url)
+    else:
+        st.caption("Belum ada video. Generate dulu ya!")
 
 streamlit_style = """
 <style>
@@ -181,6 +259,30 @@ streamlit_style = """
         border-radius: 12px !important;
         border: none !important;
     }
+
+    /* ===== RESPONSIVE MOBILE ===== */
+    @media (max-width: 768px) {
+        /* Stack columns vertically */
+        div[data-testid="column"] {
+            min-width: 100% !important;
+            max-width: 100% !important;
+            flex: 0 0 100% !important;
+        }
+        /* Reduce card padding on mobile */
+        .st-emotion-cache-1r4qj8v, .st-emotion-cache-1aezhbc,
+        div[data-testid="stExpander"], div[data-testid="stForm"] {
+            padding: 0.8rem !important;
+            border-radius: 12px !important;
+        }
+        /* Full-width buttons on mobile */
+        .stButton button, div[data-testid="stForm"] button {
+            width: 100% !important;
+        }
+        /* Smaller titles on mobile */
+        h1 { font-size: 1.5em !important; }
+        /* Reduce textarea height */
+        .stTextArea textarea { height: 180px !important; }
+    }
 </style>
 """
 st.markdown(streamlit_style, unsafe_allow_html=True)
@@ -206,7 +308,7 @@ if "custom_system_prompt" not in st.session_state:
 if "use_custom_system_prompt" not in st.session_state:
     st.session_state["use_custom_system_prompt"] = False
 if "ui_language" not in st.session_state:
-    st.session_state["ui_language"] = config.ui.get("language", system_locale)
+    st.session_state["ui_language"] = config.ui.get("language", "id-ID")
 if "local_video_materials" not in st.session_state:
     # 记住用户最近一次已经落盘的本地素材，避免仅修改文案后二次生成时丢失素材列表。
     st.session_state["local_video_materials"] = []
@@ -218,7 +320,7 @@ locales = utils.load_locales(i18n_dir)
 title_col, lang_col = st.columns([3, 1])
 
 with title_col:
-    st.title(f"MoneyPrinterTurbo v{config.project_version}")
+    st.title("Kreator AI")
 
 with lang_col:
     display_languages = []
@@ -228,11 +330,16 @@ with lang_col:
         if code == st.session_state.get("ui_language", ""):
             selected_index = i
 
+    # If id-ID is in the list, select it as default
+    for i, code in enumerate(locales.keys()):
+        if code == "id-ID":
+            selected_index = i
+            break
     selected_language = st.selectbox(
-        "Language / 语言",
+        "Bahasa",
         options=display_languages,
         index=selected_index,
-        key="top_language_selector",
+        key="lang_selector_v2",
         label_visibility="collapsed",
     )
     if selected_language:
@@ -241,17 +348,17 @@ with lang_col:
         config.ui["language"] = code
 
 support_locales = [
+    "id-ID",
+    "en-US",
     "zh-CN",
     "zh-HK",
     "zh-TW",
     "de-DE",
-    "en-US",
     "fr-FR",
     "ru-RU",
     "vi-VN",
     "th-TH",
     "tr-TR",
-    "id-ID",
 ]
 
 
@@ -383,22 +490,25 @@ def get_groq_model_ids(api_key: str, base_url: str) -> list[str]:
         logger.warning(f"failed to fetch groq models: {e}")
         return []
 
-# 创建基础设置折叠框
-if not config.app.get("hide_config", False):
-    with st.expander(tr("Basic Settings"), expanded=False):
+# 创建基础设置（总是显示）
+with st.expander(tr("Basic Settings"), expanded=False):
         config_panels = st.columns(3)
         left_config_panel = config_panels[0]
         middle_config_panel = config_panels[1]
         right_config_panel = config_panels[2]
 
-        # 左侧面板 - 日志设置
+        # 左侧面板 - Quick Start & Info
         with left_config_panel:
-            # 是否隐藏配置面板
-            hide_config = st.checkbox(
-                tr("Hide Basic Settings"), value=config.app.get("hide_config", False)
-            )
-            config.app["hide_config"] = hide_config
-
+            st.markdown("#### ⚡ 3 Langkah Mulai")
+            st.caption("1. Dapatkan 2 API key gratis: DeepSeek (naskah) & Pexels (video)")
+            st.caption("2. Tempel key di kolom kanan, pilih mode di sidebar")
+            st.caption("3. Ketik topik, Generate — video HD siap 1-3 menit")
+            st.caption("[📖 Panduan lengkap →](http://127.0.0.1:8081/guide.html)")
+            st.markdown("---")
+            st.caption("**Gratis:** DeepSeek · Groq · Gemini · Ollama · G4f · Pexels · Azure TTS")
+            st.caption("**Berbayar:** OpenAI (GPT-4o) · Claude · Grok · Qwen · Moonshot")
+            st.caption("⚠️ Error \"Insufficient Balance\"? Ganti ke Groq atau Gemini — gratis juga!")
+            st.markdown("---")
             # 是否禁用日志显示
             hide_log = st.checkbox(
                 tr("Hide Log"), value=config.ui.get("hide_log", False)
@@ -692,10 +802,17 @@ if not config.app.get("hide_config", False):
                     )
                 st.info(tips)
 
+            # Use localStorage-backed session state for API keys (NEVER saved to disk/server)
+            ls_llm_api_key = get_user_key(f"{llm_provider}_api_key", "")
             st_llm_api_key = st.text_input(
-                tr("API Key"), value=llm_api_key, type="password",
-                placeholder=tr("API Key Placeholder")
+                tr("API Key"), value=ls_llm_api_key or llm_api_key, type="password",
+                placeholder=tr("API Key Placeholder"), key=f"ls_{llm_provider}_api_key"
             )
+            if st_llm_api_key and st_llm_api_key != ls_llm_api_key:
+                set_user_key(f"{llm_provider}_api_key", st_llm_api_key)
+                # Also update config.app for backward compat with services
+                config.app[f"{llm_provider}_api_key"] = st_llm_api_key
+
             st_llm_base_url = st.text_input(tr("Base Url"), value=llm_base_url,
                 placeholder=tr("Base Url Placeholder"))
             st_llm_model_name = ""
@@ -835,6 +952,8 @@ with left_panel:
         )
         params.video_language = video_languages[selected_index][1]
 
+        is_advanced = st.session_state.get("ui_mode", "simple") == "advanced"
+
         with st.expander(tr("Advanced Script Settings"), expanded=False):
             params.paragraph_number = st.slider(
                 tr("Script Paragraph Number"),
@@ -891,605 +1010,330 @@ with left_panel:
             tr("Video Script"), value=st.session_state["video_script"], height=280,
             placeholder=tr("Video Script Placeholder")
         )
-        if st.button(tr("Generate Video Keywords"), key="auto_generate_terms"):
-            if not params.video_script:
-                st.error(tr("Please Enter the Video Subject"))
-                st.stop()
+        if is_advanced:
+            if st.button(tr("Generate Video Keywords"), key="auto_generate_terms"):
+                if not params.video_script:
+                    st.error(tr("Please Enter the Video Subject"))
+                    st.stop()
 
-            with st.spinner(tr("Generating Video Keywords")):
-                terms = llm.generate_terms(params.video_subject, params.video_script)
-                if "Error: " in terms:
-                    st.error(tr(terms))
-                else:
-                    st.session_state["video_terms"] = ", ".join(terms)
+                with st.spinner(tr("Generating Video Keywords")):
+                    terms = llm.generate_terms(params.video_subject, params.video_script)
+                    if "Error: " in terms:
+                        st.error(tr(terms))
+                    else:
+                        st.session_state["video_terms"] = ", ".join(terms)
 
-        params.video_terms = st.text_area(
-            tr("Video Keywords"), value=st.session_state["video_terms"]
-        )
+            params.video_terms = st.text_area(
+                tr("Video Keywords"), value=st.session_state["video_terms"]
+            )
+        else:
+            params.video_terms = st.session_state.get("video_terms", "")
+
+# In Simple mode, hide Audio & Subtitle panels (they use defaults)
+_show_advanced_panels = st.session_state.get("ui_mode", "simple") == "advanced"
 
 with middle_panel:
-    with st.container(border=True):
-        st.write(tr("Video Settings"))
-        video_concat_modes = [
-            (tr("Sequential"), "sequential"),
-            (tr("Random"), "random"),
-        ]
-        video_sources = [
-            (tr("Pexels"), "pexels"),
-            (tr("Pixabay"), "pixabay"),
-            (tr("Local file"), "local"),
-            (tr("TikTok"), "douyin"),
-            (tr("Bilibili"), "bilibili"),
-            (tr("Xiaohongshu"), "xiaohongshu"),
-        ]
-
-        saved_video_source_name = config.app.get("video_source", "pexels")
-        saved_video_source_index = [v[1] for v in video_sources].index(
-            saved_video_source_name
-        )
-
-        selected_index = st.selectbox(
-            tr("Video Source"),
-            options=range(len(video_sources)),
-            format_func=lambda x: video_sources[x][0],
-            index=saved_video_source_index,
-        )
-        params.video_source = video_sources[selected_index][1]
-        config.app["video_source"] = params.video_source
-
-        if params.video_source == "local":
-            # Streamlit 的文件类型校验对扩展名大小写敏感，这里同时放行大小写两种形式。
-            local_file_types = ["mp4", "mov", "avi", "flv", "mkv", "jpg", "jpeg", "png"]
-            uploaded_files = st.file_uploader(
-                tr("Upload Local Files"),
-                type=local_file_types + [file_type.upper() for file_type in local_file_types],
-                accept_multiple_files=True,
-            )
-
-        selected_index = st.selectbox(
-            tr("Video Concat Mode"),
-            index=1,
-            options=range(
-                len(video_concat_modes)
-            ),  # Use the index as the internal option value
-            format_func=lambda x: video_concat_modes[x][
-                0
-            ],  # The label is displayed to the user
-        )
-        params.video_concat_mode = VideoConcatMode(
-            video_concat_modes[selected_index][1]
-        )
-
-        # 视频转场模式
-        video_transition_modes = [
-            (tr("None"), VideoTransitionMode.none.value),
-            (tr("Shuffle"), VideoTransitionMode.shuffle.value),
-            (tr("FadeIn"), VideoTransitionMode.fade_in.value),
-            (tr("FadeOut"), VideoTransitionMode.fade_out.value),
-            (tr("SlideIn"), VideoTransitionMode.slide_in.value),
-            (tr("SlideOut"), VideoTransitionMode.slide_out.value),
-        ]
-        selected_index = st.selectbox(
-            tr("Video Transition Mode"),
-            options=range(len(video_transition_modes)),
-            format_func=lambda x: video_transition_modes[x][0],
-            index=0,
-        )
-        params.video_transition_mode = VideoTransitionMode(
-            video_transition_modes[selected_index][1]
-        )
-
-        video_aspect_ratios = [
-            (tr("Portrait"), VideoAspect.portrait.value),
-            (tr("Landscape"), VideoAspect.landscape.value),
-        ]
-        selected_index = st.selectbox(
-            tr("Video Ratio"),
-            options=range(
-                len(video_aspect_ratios)
-            ),  # Use the index as the internal option value
-            format_func=lambda x: video_aspect_ratios[x][
-                0
-            ],  # The label is displayed to the user
-        )
-        params.video_aspect = VideoAspect(video_aspect_ratios[selected_index][1])
-
-        params.video_clip_duration = st.selectbox(
-            tr("Clip Duration"), options=[2, 3, 4, 5, 6, 7, 8, 9, 10], index=1
-        )
-        params.video_count = st.selectbox(
-            tr("Number of Videos Generated Simultaneously"),
-            options=[1, 2, 3, 4, 5],
-            index=0,
-        )
-
-        with st.expander(tr("Advanced Video Settings"), expanded=False):
-            video_codec_options = [
-                ("libx264 (CPU)", "libx264"),
-                ("NVIDIA NVENC (h264_nvenc)", "h264_nvenc"),
-                ("AMD AMF (h264_amf)", "h264_amf"),
-                ("Intel QSV (h264_qsv)", "h264_qsv"),
-                ("Windows MediaFoundation (h264_mf)", "h264_mf"),
-                ("macOS VideoToolbox (h264_videotoolbox)", "h264_videotoolbox"),
+    if _show_advanced_panels:
+        with st.container(border=True):
+            st.write(tr("Video Settings"))
+            video_concat_modes = [
+                (tr("Sequential"), "sequential"),
+                (tr("Random"), "random"),
             ]
-            saved_video_codec = config.app.get("video_codec", "libx264")
-            saved_video_codec_values = [item[1] for item in video_codec_options]
-            if saved_video_codec not in saved_video_codec_values:
-                saved_video_codec = "libx264"
-            selected_codec_index = saved_video_codec_values.index(saved_video_codec)
-            selected_codec_index = st.selectbox(
-                tr("Video Encoder"),
-                options=range(len(video_codec_options)),
-                index=selected_codec_index,
-                format_func=lambda x: video_codec_options[x][0],
-                help=tr("Video Encoder Help"),
+            video_sources = [
+                (tr("Pexels"), "pexels"),
+                (tr("Pixabay"), "pixabay"),
+                (tr("Local file"), "local"),
+                (tr("TikTok"), "douyin"),
+                (tr("Bilibili"), "bilibili"),
+                (tr("Xiaohongshu"), "xiaohongshu"),
+            ]
+
+            saved_video_source_name = config.app.get("video_source", "pexels")
+            saved_video_source_index = [v[1] for v in video_sources].index(saved_video_source_name)
+
+            selected_index = st.selectbox(
+                tr("Video Source"),
+                options=range(len(video_sources)),
+                format_func=lambda x: video_sources[x][0],
+                index=saved_video_source_index,
             )
-            config.app["video_codec"] = video_codec_options[selected_codec_index][1]
-    with st.container(border=True):
-        st.write(tr("Audio Settings"))
+            params.video_source = video_sources[selected_index][1]
+            config.app["video_source"] = params.video_source
 
-        # 添加TTS服务器选择下拉框
-        tts_servers = [
-            (voice.NO_VOICE_NAME, tr("No Voice")),
-            ("azure-tts-v1", "Azure TTS V1"),
-            ("azure-tts-v2", "Azure TTS V2"),
-            ("siliconflow", "SiliconFlow TTS"),
-            ("gemini-tts", "Google Gemini TTS"),
-            ("mimo-tts", "Xiaomi MiMo TTS"),
-        ]
+            if params.video_source == "local":
+                local_file_types = ["mp4", "mov", "avi", "flv", "mkv", "jpg", "jpeg", "png"]
+                uploaded_files = st.file_uploader(
+                    tr("Upload Local Files"),
+                    type=local_file_types + [file_type.upper() for file_type in local_file_types],
+                    accept_multiple_files=True,
+                )
 
-        # 获取保存的TTS服务器，默认为v1
-        saved_tts_server = config.ui.get("tts_server", "azure-tts-v1")
-        saved_tts_server_index = 0
-        for i, (server_value, _) in enumerate(tts_servers):
-            if server_value == saved_tts_server:
-                saved_tts_server_index = i
-                break
+            selected_index = st.selectbox(
+                tr("Video Concat Mode"), index=1,
+                options=range(len(video_concat_modes)),
+                format_func=lambda x: video_concat_modes[x][0],
+            )
+            params.video_concat_mode = VideoConcatMode(video_concat_modes[selected_index][1])
 
-        selected_tts_server_index = st.selectbox(
-            tr("TTS Servers"),
-            options=range(len(tts_servers)),
-            format_func=lambda x: tts_servers[x][1],
-            index=saved_tts_server_index,
-        )
+            video_transition_modes = [
+                (tr("None"), VideoTransitionMode.none.value),
+                (tr("Shuffle"), VideoTransitionMode.shuffle.value),
+                (tr("FadeIn"), VideoTransitionMode.fade_in.value),
+                (tr("FadeOut"), VideoTransitionMode.fade_out.value),
+                (tr("SlideIn"), VideoTransitionMode.slide_in.value),
+                (tr("SlideOut"), VideoTransitionMode.slide_out.value),
+            ]
+            selected_index = st.selectbox(
+                tr("Video Transition Mode"),
+                options=range(len(video_transition_modes)),
+                format_func=lambda x: video_transition_modes[x][0],
+                index=0,
+            )
+            params.video_transition_mode = VideoTransitionMode(video_transition_modes[selected_index][1])
 
-        selected_tts_server = tts_servers[selected_tts_server_index][0]
-        config.ui["tts_server"] = selected_tts_server
+            video_aspect_ratios = [
+                (tr("Portrait"), VideoAspect.portrait.value),
+                (tr("Landscape"), VideoAspect.landscape.value),
+            ]
+            selected_index = st.selectbox(
+                tr("Video Ratio"),
+                options=range(len(video_aspect_ratios)),
+                format_func=lambda x: video_aspect_ratios[x][0],
+            )
+            params.video_aspect = VideoAspect(video_aspect_ratios[selected_index][1])
 
-        # 根据选择的TTS服务器获取声音列表
-        filtered_voices = []
+            params.video_clip_duration = st.selectbox(
+                tr("Clip Duration"), options=[2, 3, 4, 5, 6, 7, 8, 9, 10], index=1
+            )
+            params.video_count = st.selectbox(
+                tr("Number of Videos Generated Simultaneously"),
+                options=[1, 2, 3, 4, 5], index=0,
+            )
 
-        if selected_tts_server == voice.NO_VOICE_NAME:
-            # 无配音是显式模式，只提供一个稳定 sentinel。这样普通 TTS 的空配置
-            # 不会被误判为静音，后端也能继续通过同一条音频/字幕流程生成视频。
-            filtered_voices = [voice.NO_VOICE_NAME]
-        elif selected_tts_server == "siliconflow":
-            # 获取硅基流动的声音列表
-            filtered_voices = voice.get_siliconflow_voices()
-        elif selected_tts_server == "gemini-tts":
-            # 获取Gemini TTS的声音列表
-            filtered_voices = voice.get_gemini_voices()
-        elif selected_tts_server == "mimo-tts":
-            # 获取 Xiaomi MiMo TTS 的预置音色列表
-            filtered_voices = voice.get_mimo_voices()
-        else:
-            # 获取Azure的声音列表
-            all_voices = voice.get_all_azure_voices(filter_locals=None)
+            with st.expander(tr("Advanced Video Settings"), expanded=False):
+                video_codec_options = [
+                    ("libx264 (CPU)", "libx264"),
+                    ("NVIDIA NVENC (h264_nvenc)", "h264_nvenc"),
+                    ("AMD AMF (h264_amf)", "h264_amf"),
+                    ("Intel QSV (h264_qsv)", "h264_qsv"),
+                    ("Windows MediaFoundation (h264_mf)", "h264_mf"),
+                    ("macOS VideoToolbox (h264_videotoolbox)", "h264_videotoolbox"),
+                ]
+                saved_video_codec = config.app.get("video_codec", "libx264")
+                saved_video_codec_values = [item[1] for item in video_codec_options]
+                if saved_video_codec not in saved_video_codec_values:
+                    saved_video_codec = "libx264"
+                selected_codec_index = saved_video_codec_values.index(saved_video_codec)
+                selected_codec_index = st.selectbox(
+                    tr("Video Encoder"),
+                    options=range(len(video_codec_options)),
+                    index=selected_codec_index,
+                    format_func=lambda x: video_codec_options[x][0],
+                    help=tr("Video Encoder Help"),
+                )
+                config.app["video_codec"] = video_codec_options[selected_codec_index][1]
 
-            # 根据选择的TTS服务器筛选声音
-            for v in all_voices:
-                if selected_tts_server == "azure-tts-v2":
-                    # V2版本的声音名称中包含"v2"
-                    if "V2" in v:
-                        filtered_voices.append(v)
-                else:
-                    # V1版本的声音名称中不包含"v2"
-                    if "V2" not in v:
-                        filtered_voices.append(v)
+        with st.container(border=True):
+            st.write(tr("Audio Settings"))
+            tts_servers = [
+                (voice.NO_VOICE_NAME, tr("No Voice")),
+                ("azure-tts-v1", "Azure TTS V1"),
+                ("azure-tts-v2", "Azure TTS V2"),
+                ("siliconflow", "SiliconFlow TTS"),
+                ("gemini-tts", "Google Gemini TTS"),
+                ("mimo-tts", "Xiaomi MiMo TTS"),
+            ]
 
-        if selected_tts_server == voice.NO_VOICE_NAME:
-            friendly_names = {voice.NO_VOICE_NAME: tr("No Voice")}
-        else:
-            friendly_names = {
-                v: v.replace("Female", tr("Female"))
-                .replace("Male", tr("Male"))
-                .replace("Neural", "")
-                for v in filtered_voices
-            }
-
-        saved_voice_name = config.ui.get("voice_name", "")
-        saved_voice_name_index = 0
-
-        # 检查保存的声音是否在当前筛选的声音列表中
-        if saved_voice_name in friendly_names:
-            saved_voice_name_index = list(friendly_names.keys()).index(saved_voice_name)
-        else:
-            # 如果不在，则根据当前UI语言选择一个默认声音
-            for i, v in enumerate(filtered_voices):
-                if v.lower().startswith(st.session_state["ui_language"].lower()):
-                    saved_voice_name_index = i
+            saved_tts_server = config.ui.get("tts_server", "azure-tts-v1")
+            saved_tts_server_index = 0
+            for i, (server_value, _) in enumerate(tts_servers):
+                if server_value == saved_tts_server:
+                    saved_tts_server_index = i
                     break
 
-        # 如果没有找到匹配的声音，使用第一个声音
-        if saved_voice_name_index >= len(friendly_names) and friendly_names:
+            selected_tts_server_index = st.selectbox(
+                tr("TTS Servers"),
+                options=range(len(tts_servers)),
+                format_func=lambda x: tts_servers[x][1],
+                index=saved_tts_server_index,
+            )
+
+            selected_tts_server = tts_servers[selected_tts_server_index][0]
+            config.ui["tts_server"] = selected_tts_server
+
+            filtered_voices = []
+            if selected_tts_server == voice.NO_VOICE_NAME:
+                filtered_voices = [voice.NO_VOICE_NAME]
+            elif selected_tts_server == "siliconflow":
+                filtered_voices = voice.get_siliconflow_voices()
+            elif selected_tts_server == "gemini-tts":
+                filtered_voices = voice.get_gemini_voices()
+            elif selected_tts_server == "mimo-tts":
+                filtered_voices = voice.get_mimo_voices()
+            else:
+                all_voices = voice.get_all_azure_voices(filter_locals=None)
+                for v in all_voices:
+                    if selected_tts_server == "azure-tts-v2":
+                        if "V2" in v:
+                            filtered_voices.append(v)
+                    else:
+                        if "V2" not in v:
+                            filtered_voices.append(v)
+
+            if selected_tts_server == voice.NO_VOICE_NAME:
+                friendly_names = {voice.NO_VOICE_NAME: tr("No Voice")}
+            else:
+                friendly_names = {
+                    v: v.replace("Female", tr("Female")).replace("Male", tr("Male")).replace("Neural", "")
+                    for v in filtered_voices
+                }
+
+            saved_voice_name = config.ui.get("voice_name", "")
             saved_voice_name_index = 0
+            if saved_voice_name in friendly_names:
+                saved_voice_name_index = list(friendly_names.keys()).index(saved_voice_name)
+            else:
+                for i, v in enumerate(filtered_voices):
+                    if v.lower().startswith(st.session_state["ui_language"].lower()):
+                        saved_voice_name_index = i
+                        break
+            if saved_voice_name_index >= len(friendly_names) and friendly_names:
+                saved_voice_name_index = 0
 
-        # 确保有声音可选
-        if friendly_names:
-            selected_friendly_name = st.selectbox(
-                tr("Speech Synthesis"),
-                options=list(friendly_names.values()),
-                index=min(saved_voice_name_index, len(friendly_names) - 1)
-                if friendly_names
-                else 0,
-            )
-
-            voice_name = list(friendly_names.keys())[
-                list(friendly_names.values()).index(selected_friendly_name)
-            ]
-            params.voice_name = voice_name
-            config.ui["voice_name"] = voice_name
-        else:
-            # 如果没有声音可选，显示提示信息
-            st.warning(
-                tr(
-                    "No voices available for the selected TTS server. Please select another server."
+            if friendly_names:
+                selected_friendly_name = st.selectbox(
+                    tr("Speech Synthesis"),
+                    options=list(friendly_names.values()),
+                    index=min(saved_voice_name_index, len(friendly_names) - 1) if friendly_names else 0,
                 )
-            )
-            params.voice_name = ""
-            config.ui["voice_name"] = ""
+                voice_name = list(friendly_names.keys())[list(friendly_names.values()).index(selected_friendly_name)]
+                params.voice_name = voice_name
+                config.ui["voice_name"] = voice_name
+            else:
+                st.warning(tr("No voices available for the selected TTS server. Please select another server."))
+                params.voice_name = ""
+                config.ui["voice_name"] = ""
 
-        # 无配音模式会生成静音占位音频，不展示试听按钮，避免用户误以为需要测试声音。
-        if (
-            friendly_names
-            and selected_tts_server != voice.NO_VOICE_NAME
-            and st.button(tr("Play Voice"))
-        ):
-            play_content = params.video_subject
-            if not play_content:
-                play_content = params.video_script
-            if not play_content:
-                play_content = tr("Voice Example")
-            with st.spinner(tr("Synthesizing Voice")):
-                temp_dir = utils.storage_dir("temp", create=True)
-                audio_file = os.path.join(temp_dir, f"tmp-voice-{str(uuid4())}.mp3")
-                sub_maker = voice.tts(
-                    text=play_content,
-                    voice_name=voice_name,
-                    voice_rate=params.voice_rate,
-                    voice_file=audio_file,
-                    voice_volume=params.voice_volume,
-                )
-                # if the voice file generation failed, try again with a default content.
-                if not sub_maker:
-                    play_content = "This is a example voice. if you hear this, the voice synthesis failed with the original content."
-                    sub_maker = voice.tts(
-                        text=play_content,
-                        voice_name=voice_name,
-                        voice_rate=params.voice_rate,
-                        voice_file=audio_file,
-                        voice_volume=params.voice_volume,
-                    )
+            if friendly_names and selected_tts_server != voice.NO_VOICE_NAME and st.button(tr("Play Voice")):
+                play_content = params.video_subject or params.video_script or tr("Voice Example")
+                with st.spinner(tr("Synthesizing Voice")):
+                    temp_dir = utils.storage_dir("temp", create=True)
+                    audio_file = os.path.join(temp_dir, f"tmp-voice-{str(uuid4())}.mp3")
+                    sub_maker = voice.tts(text=play_content, voice_name=voice_name, voice_rate=params.voice_rate, voice_file=audio_file, voice_volume=params.voice_volume)
+                    if not sub_maker:
+                        play_content = "This is a example voice."
+                        sub_maker = voice.tts(text=play_content, voice_name=voice_name, voice_rate=params.voice_rate, voice_file=audio_file, voice_volume=params.voice_volume)
+                    if sub_maker and os.path.exists(audio_file):
+                        st.audio(audio_file, format="audio/mp3")
+                        if os.path.exists(audio_file):
+                            os.remove(audio_file)
 
-                if sub_maker and os.path.exists(audio_file):
-                    st.audio(audio_file, format="audio/mp3")
-                    if os.path.exists(audio_file):
-                        os.remove(audio_file)
+            params.voice_volume = st.selectbox(tr("Speech Volume"), options=[0.6, 0.8, 1.0, 1.2, 1.5, 2.0, 3.0, 4.0, 5.0], index=2)
+            params.voice_rate = st.selectbox(tr("Speech Rate"), options=[0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.5, 1.8, 2.0], index=2)
 
-        # 当选择V2版本或者声音是V2声音时，显示服务区域和API key输入框
-        if selected_tts_server == "azure-tts-v2" or (
-            voice_name and voice.is_azure_v2_voice(voice_name)
-        ):
-            saved_azure_speech_region = config.azure.get("speech_region", "")
-            saved_azure_speech_key = config.azure.get("speech_key", "")
-            azure_speech_region = st.text_input(
-                tr("Speech Region"),
-                value=saved_azure_speech_region,
-                key="azure_speech_region_input",
-            )
-            azure_speech_key = st.text_input(
-                tr("Speech Key"),
-                value=saved_azure_speech_key,
-                type="password",
-                key="azure_speech_key_input",
-            )
-            config.azure["speech_region"] = azure_speech_region
-            config.azure["speech_key"] = azure_speech_key
+            custom_audio_file_types = ["mp3", "wav", "m4a", "aac", "flac", "ogg"]
+            uploaded_audio_file = st.file_uploader(tr("Custom Audio File"), type=custom_audio_file_types + [t.upper() for t in custom_audio_file_types], accept_multiple_files=False, key="custom_audio_file_uploader")
+            if uploaded_audio_file:
+                st.audio(uploaded_audio_file, format="audio/mp3")
+                st.info(tr("Custom audio will be used directly. TTS synthesis will be skipped for this task."))
 
-        # 当选择硅基流动时，显示API key输入框和说明信息
-        if selected_tts_server == "siliconflow" or (
-            voice_name and voice.is_siliconflow_voice(voice_name)
-        ):
-            saved_siliconflow_api_key = config.siliconflow.get("api_key", "")
-
-            siliconflow_api_key = st.text_input(
-                tr("SiliconFlow API Key"),
-                value=saved_siliconflow_api_key,
-                type="password",
-                key="siliconflow_api_key_input",
-            )
-
-            # 显示硅基流动的说明信息
-            st.info(
-                tr("SiliconFlow TTS Settings")
-                + ":\n"
-                + "- "
-                + tr("Speed: Range [0.25, 4.0], default is 1.0")
-                + "\n"
-                + "- "
-                + tr("Volume: Uses Speech Volume setting, default 1.0 maps to gain 0")
-            )
-
-            config.siliconflow["api_key"] = siliconflow_api_key
-
-        # 当选择 Xiaomi MiMo TTS 时，复用 MiMo LLM provider 的 API Key。
-        # 这样用户如果同时使用 MiMo 生成文案和语音，只需要维护一份密钥。
-        if selected_tts_server == "mimo-tts" or (
-            voice_name and voice.is_mimo_voice(voice_name)
-        ):
-            saved_mimo_api_key = config.app.get("mimo_api_key", "")
-
-            mimo_api_key = st.text_input(
-                tr("MiMo API Key"),
-                value=saved_mimo_api_key,
-                type="password",
-                key="mimo_tts_api_key_input",
-            )
-
-            st.info(
-                tr("MiMo TTS Settings")
-                + ":\n"
-                + "- "
-                + tr("Uses Xiaomi MiMo V2.5 TTS preset voices")
-                + "\n"
-                + "- "
-                + tr("Speed and volume are currently handled by the provider defaults")
-            )
-
-            config.app["mimo_api_key"] = mimo_api_key
-
-        params.voice_volume = st.selectbox(
-            tr("Speech Volume"),
-            options=[0.6, 0.8, 1.0, 1.2, 1.5, 2.0, 3.0, 4.0, 5.0],
-            index=2,
-        )
-
-        params.voice_rate = st.selectbox(
-            tr("Speech Rate"),
-            options=[0.8, 0.9, 1.0, 1.1, 1.2, 1.3, 1.5, 1.8, 2.0],
-            index=2,
-        )
-
-        custom_audio_file_types = ["mp3", "wav", "m4a", "aac", "flac", "ogg"]
-        uploaded_audio_file = st.file_uploader(
-            tr("Custom Audio File"),
-            type=custom_audio_file_types
-            + [file_type.upper() for file_type in custom_audio_file_types],
-            accept_multiple_files=False,
-            key="custom_audio_file_uploader",
-        )
-        if uploaded_audio_file:
-            st.audio(uploaded_audio_file, format="audio/mp3")
-            st.info(
-                tr(
-                    "Custom audio will be used directly. TTS synthesis will be skipped for this task."
-                )
-            )
-
-        bgm_options = [
-            (tr("No Background Music"), ""),
-            (tr("Random Background Music"), "random"),
-            (tr("Custom Background Music"), "custom"),
-        ]
-        selected_index = st.selectbox(
-            tr("Background Music"),
-            index=1,
-            options=range(
-                len(bgm_options)
-            ),  # Use the index as the internal option value
-            format_func=lambda x: bgm_options[x][
-                0
-            ],  # The label is displayed to the user
-        )
-        # Get the selected background music type
-        params.bgm_type = bgm_options[selected_index][1]
-
-        # Show or hide components based on the selection
-        if params.bgm_type == "custom":
-            custom_bgm_file = st.text_input(
-                tr("Custom Background Music File"), key="custom_bgm_file_input"
-            )
-            if custom_bgm_file:
-                # 这里不直接用 os.path.exists 判断，因为用户常见输入是
-                # output000.mp3，这个文件名需要由服务层映射到 resource/songs
-                # 目录后再校验。服务层会统一限制目录和文件类型，避免任意路径读取。
-                params.bgm_file = custom_bgm_file.strip()
-                # st.write(f":red[已选择自定义背景音乐]：**{custom_bgm_file}**")
-        params.bgm_volume = st.selectbox(
-            tr("Background Music Volume"),
-            options=[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0],
-            index=2,
-        )
+            bgm_options = [(tr("No Background Music"), ""), (tr("Random Background Music"), "random"), (tr("Custom Background Music"), "custom")]
+            selected_index = st.selectbox(tr("Background Music"), index=1, options=range(len(bgm_options)), format_func=lambda x: bgm_options[x][0])
+            params.bgm_type = bgm_options[selected_index][1]
+            if params.bgm_type == "custom":
+                custom_bgm_file = st.text_input(tr("Custom Background Music File"), key="custom_bgm_file_input")
+                if custom_bgm_file:
+                    params.bgm_file = custom_bgm_file.strip()
+            params.bgm_volume = st.selectbox(tr("Background Music Volume"), options=[0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0], index=2)
 
 with right_panel:
-    with st.container(border=True):
-        st.write(tr("Subtitle Settings"))
-        params.subtitle_enabled = st.checkbox(tr("Enable Subtitles"), value=True)
-        font_names = get_all_fonts()
-        saved_font_name = config.ui.get("font_name", "MicrosoftYaHeiBold.ttc")
-        saved_font_name_index = 0
-        if saved_font_name in font_names:
-            saved_font_name_index = font_names.index(saved_font_name)
-        params.font_name = st.selectbox(
-            tr("Font"), font_names, index=saved_font_name_index
-        )
-        config.ui["font_name"] = params.font_name
+        if _show_advanced_panels:
+            with st.container(border=True):
+                st.write(tr("Subtitle Settings"))
+                params.subtitle_enabled = st.checkbox(tr("Enable Subtitles"), value=True)
+                font_names = get_all_fonts()
+                saved_font_name = config.ui.get("font_name", "MicrosoftYaHeiBold.ttc")
+                saved_font_name_index = 0
+                if saved_font_name in font_names:
+                    saved_font_name_index = font_names.index(saved_font_name)
+                params.font_name = st.selectbox(tr("Font"), font_names, index=saved_font_name_index)
+                config.ui["font_name"] = params.font_name
 
-        subtitle_positions = [
-            (tr("Top"), "top"),
-            (tr("Center"), "center"),
-            (tr("Bottom"), "bottom"),
-            (tr("Custom"), "custom"),
-        ]
-        saved_subtitle_position = config.ui.get("subtitle_position", "bottom")
-        saved_position_index = 2
-        for i, (_, pos_value) in enumerate(subtitle_positions):
-            if pos_value == saved_subtitle_position:
-                saved_position_index = i
-                break
-        selected_index = st.selectbox(
-            tr("Position"),
-            index=saved_position_index,
-            options=range(len(subtitle_positions)),
-            format_func=lambda x: subtitle_positions[x][0],
-        )
-        params.subtitle_position = subtitle_positions[selected_index][1]
-        config.ui["subtitle_position"] = params.subtitle_position
+                subtitle_positions = [
+                    (tr("Top"), "top"), (tr("Center"), "center"),
+                    (tr("Bottom"), "bottom"), (tr("Custom"), "custom"),
+                ]
+                saved_subtitle_position = config.ui.get("subtitle_position", "bottom")
+                saved_position_index = 2
+                for i, (_, pos_value) in enumerate(subtitle_positions):
+                    if pos_value == saved_subtitle_position:
+                        saved_position_index = i
+                        break
+                selected_index = st.selectbox(tr("Position"), index=saved_position_index,
+                    options=range(len(subtitle_positions)), format_func=lambda x: subtitle_positions[x][0])
+                params.subtitle_position = subtitle_positions[selected_index][1]
+                config.ui["subtitle_position"] = params.subtitle_position
 
-        if params.subtitle_position == "custom":
-            saved_custom_position = config.ui.get("custom_position", 70.0)
-            custom_position = st.text_input(
-                tr("Custom Position (% from top)"),
-                value=str(saved_custom_position),
-                key="custom_position_input",
-            )
-            try:
-                params.custom_position = float(custom_position)
-                if params.custom_position < 0 or params.custom_position > 100:
-                    st.error(tr("Please enter a value between 0 and 100"))
+                if params.subtitle_position == "custom":
+                    saved_custom_position = config.ui.get("custom_position", 70.0)
+                    custom_position = st.text_input(tr("Custom Position (% from top)"), value=str(saved_custom_position), key="custom_position_input")
+                    try:
+                        params.custom_position = float(custom_position)
+                        if params.custom_position < 0 or params.custom_position > 100:
+                            st.error(tr("Please enter a value between 0 and 100"))
+                        else:
+                            config.ui["custom_position"] = params.custom_position
+                    except ValueError:
+                        st.error(tr("Please enter a valid number"))
+
+                font_cols = st.columns([0.3, 0.7])
+                with font_cols[0]:
+                    saved_text_fore_color = config.ui.get("text_fore_color", "#FFFFFF")
+                    params.text_fore_color = st.color_picker(tr("Font Color"), saved_text_fore_color)
+                    config.ui["text_fore_color"] = params.text_fore_color
+                with font_cols[1]:
+                    saved_font_size = config.ui.get("font_size", 60)
+                    params.font_size = st.slider(tr("Font Size"), 30, 100, saved_font_size)
+                    config.ui["font_size"] = params.font_size
+
+                stroke_cols = st.columns([0.3, 0.7])
+                with stroke_cols[0]:
+                    params.stroke_color = st.color_picker(tr("Stroke Color"), "#000000")
+                with stroke_cols[1]:
+                    params.stroke_width = st.slider(tr("Stroke Width"), 0.0, 10.0, 1.5)
+
+                subtitle_bg_cols = st.columns([0.4, 0.6])
+                saved_subtitle_background_enabled = config.ui.get("subtitle_background_enabled", True)
+                with subtitle_bg_cols[0]:
+                    subtitle_background_enabled = st.checkbox(tr("Enable Subtitle Background"), value=saved_subtitle_background_enabled)
+                config.ui["subtitle_background_enabled"] = subtitle_background_enabled
+                if subtitle_background_enabled:
+                    with subtitle_bg_cols[1]:
+                        saved_subtitle_background_color = config.ui.get("subtitle_background_color", "#000000")
+                        params.text_background_color = st.color_picker(tr("Subtitle Background Color"), saved_subtitle_background_color)
+                        config.ui["subtitle_background_color"] = params.text_background_color
                 else:
-                    config.ui["custom_position"] = params.custom_position
-            except ValueError:
-                st.error(tr("Please enter a valid number"))
+                    params.text_background_color = False
 
-        font_cols = st.columns([0.3, 0.7])
-        with font_cols[0]:
-            saved_text_fore_color = config.ui.get("text_fore_color", "#FFFFFF")
-            params.text_fore_color = st.color_picker(
-                tr("Font Color"), saved_text_fore_color
-            )
-            config.ui["text_fore_color"] = params.text_fore_color
-
-        with font_cols[1]:
-            saved_font_size = config.ui.get("font_size", 60)
-            params.font_size = st.slider(tr("Font Size"), 30, 100, saved_font_size)
-            config.ui["font_size"] = params.font_size
-
-        stroke_cols = st.columns([0.3, 0.7])
-        with stroke_cols[0]:
-            params.stroke_color = st.color_picker(tr("Stroke Color"), "#000000")
-        with stroke_cols[1]:
-            params.stroke_width = st.slider(tr("Stroke Width"), 0.0, 10.0, 1.5)
-
-        subtitle_bg_cols = st.columns([0.4, 0.6])
-        saved_subtitle_background_enabled = config.ui.get(
-            "subtitle_background_enabled", True
-        )
-        with subtitle_bg_cols[0]:
-            subtitle_background_enabled = st.checkbox(
-                tr("Enable Subtitle Background"),
-                value=saved_subtitle_background_enabled,
-            )
-        config.ui["subtitle_background_enabled"] = subtitle_background_enabled
-        if subtitle_background_enabled:
-            with subtitle_bg_cols[1]:
-                saved_subtitle_background_color = config.ui.get(
-                    "subtitle_background_color", "#000000"
+                saved_rounded_subtitle_background = config.ui.get("rounded_subtitle_background", False)
+                params.rounded_subtitle_background = st.checkbox(
+                    tr("Rounded Subtitle Background"),
+                    value=(saved_rounded_subtitle_background if subtitle_background_enabled else False),
+                    help=tr("Rounded Subtitle Background Help"),
+                    disabled=not subtitle_background_enabled,
                 )
-                params.text_background_color = st.color_picker(
-                    tr("Subtitle Background Color"),
-                    saved_subtitle_background_color,
-                )
-                config.ui["subtitle_background_color"] = params.text_background_color
-        else:
-            params.text_background_color = False
+                if subtitle_background_enabled:
+                    config.ui["rounded_subtitle_background"] = params.rounded_subtitle_background
 
-        saved_rounded_subtitle_background = config.ui.get(
-            "rounded_subtitle_background", False
-        )
-        # 背景关闭时，圆角背景没有可渲染的底色。这里禁用控件并保留原配置，
-        # 用户下次重新开启字幕背景后，可以继续使用之前保存的圆角偏好。
-        params.rounded_subtitle_background = st.checkbox(
-            tr("Rounded Subtitle Background"),
-            value=(
-                saved_rounded_subtitle_background
-                if subtitle_background_enabled
-                else False
-            ),
-            help=tr("Rounded Subtitle Background Help"),
-            disabled=not subtitle_background_enabled,
-        )
-        if subtitle_background_enabled:
-            config.ui["rounded_subtitle_background"] = (
-                params.rounded_subtitle_background
-            )
-    with st.expander(tr("Click to show API Key management"), expanded=False):
-        st.subheader(tr("Manage Pexels and Pixabay API Keys"))
-
-        col1, col2 = st.tabs([tr("Pexels API Keys"), tr("Pixabay API Keys")])
-
-        with col1:
-            st.subheader(tr("Pexels API Keys"))
-            if config.app["pexels_api_keys"]:
-                st.write(tr("Current Keys:"))
-                for key in config.app["pexels_api_keys"]:
-                    st.code(key)
-            else:
-                st.info(tr("No Pexels API Keys currently"))
-
-            new_key = st.text_input(tr("Add Pexels API Key"), key="pexels_new_key")
-            if st.button(tr("Add Pexels API Key")):
-                if new_key and new_key not in config.app["pexels_api_keys"]:
-                    config.app["pexels_api_keys"].append(new_key)
-                    config.save_config()
-                    st.success(tr("Pexels API Key added successfully"))
-                elif new_key in config.app["pexels_api_keys"]:
-                    st.warning(tr("This API Key already exists"))
-                else:
-                    st.error(tr("Please enter a valid API Key"))
-
-            if config.app["pexels_api_keys"]:
-                delete_key = st.selectbox(
-                    tr("Select Pexels API Key to delete"), config.app["pexels_api_keys"], key="pexels_delete_key"
-                )
-                if st.button(tr("Delete Selected Pexels API Key")):
-                    config.app["pexels_api_keys"].remove(delete_key)
-                    config.save_config()
-                    st.success(tr("Pexels API Key deleted successfully"))
-
-        with col2:
-            st.subheader(tr("Pixabay API Keys"))
-
-            if config.app["pixabay_api_keys"]:
-                st.write(tr("Current Keys:"))
-                for key in config.app["pixabay_api_keys"]:
-                    st.code(key)
-            else:
-                st.info(tr("No Pixabay API Keys currently"))
-
-            new_key = st.text_input(tr("Add Pixabay API Key"), key="pixabay_new_key")
-            if st.button(tr("Add Pixabay API Key")):
-                if new_key and new_key not in config.app["pixabay_api_keys"]:
-                    config.app["pixabay_api_keys"].append(new_key)
-                    config.save_config()
-                    st.success(tr("Pixabay API Key added successfully"))
-                elif new_key in config.app["pixabay_api_keys"]:
-                    st.warning(tr("This API Key already exists"))
-                else:
-                    st.error(tr("Please enter a valid API Key"))
-
-            if config.app["pixabay_api_keys"]:
-                delete_key = st.selectbox(
-                    tr("Select Pixabay API Key to delete"), config.app["pixabay_api_keys"], key="pixabay_delete_key"
-                )
-                if st.button(tr("Delete Selected Pixabay API Key")):
-                    config.app["pixabay_api_keys"].remove(delete_key)
-                    config.save_config()
-                    st.success(tr("Pixabay API Key deleted successfully"))
+# Set default voice if not configured (for Simple Mode)
+if not params.voice_name:
+    params.voice_name = "id-ID-ArdiNeural"
+    config.ui["voice_name"] = params.voice_name
 
 start_button = st.button(tr("Generate Video"), use_container_width=True, type="primary")
 if start_button:
-    config.save_config()
+    # Jangan simpan API key ke disk — config.save_config() dipanggil di akhir tanpa API keys
     task_id = str(uuid4())
     if not params.video_subject and not params.video_script:
         st.error(tr("Video Script and Subject Cannot Both Be Empty"))
@@ -1555,6 +1399,10 @@ if start_button:
             if m.url:
                 params.video_materials.append(m)
 
+    # --- Progress bar ---
+    progress_bar = st.progress(0, text="Memulai...")
+    status_text = st.empty()
+
     log_container = st.empty()
     log_records = []
 
@@ -1572,22 +1420,39 @@ if start_button:
     logger.info(utils.to_json(params))
     scroll_to_bottom()
 
+    # Update progress during generation (approximate stages)
+    status_text.info("⏳ Menulis naskah...")
+    progress_bar.progress(5, text="Menulis naskah...")
+
     result = tm.start(task_id=task_id, params=params)
+
     if not result or "videos" not in result:
-        st.error(tr("Video Generation Failed"))
+        progress_bar.progress(100, text="Gagal ❌")
+        status_text.error(tr("Video Generation Failed"))
         logger.error(tr("Video Generation Failed"))
         scroll_to_bottom()
         st.stop()
 
     video_files = result.get("videos", [])
-    st.success(tr("Video Generation Completed"))
-    try:
-        if video_files:
-            player_cols = st.columns(len(video_files) * 2 + 1)
-            for i, url in enumerate(video_files):
-                player_cols[i * 2 + 1].video(url)
-    except Exception:
-        pass
+    progress_bar.progress(100, text="Selesai ✅")
+    status_text.success(tr("Video Generation Completed"))
+
+    # --- Display videos ---
+    if video_files:
+        st.markdown("### 🎬 Video Hasil")
+        for i, url in enumerate(video_files):
+            st.video(url)
+            st.caption(f"Video {i+1} — klik kanan untuk download")
+
+    # --- Save to history ---
+    if "video_history" not in st.session_state:
+        st.session_state["video_history"] = []
+    st.session_state["video_history"].append({
+        "subject": params.video_subject,
+        "urls": video_files,
+        "task_id": task_id,
+        "time": utils.datetime_now(),
+    })
 
     open_task_folder(task_id)
     logger.info(tr("Video Generation Completed"))
