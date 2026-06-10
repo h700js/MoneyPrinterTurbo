@@ -149,6 +149,16 @@
     "Pixabay API Key deleted successfully": "Pixabay API Key deleted successfully",
     "Advanced Video Settings": "Advanced Video Settings",
     "Video Encoder": "Video Encoder",
-    "Video Encoder Help": "Advanced option. libx264 is the safest default. When a hardware encoder is selected, the app falls back to libx264 if the current FFmpeg, GPU, or driver cannot use it."
+    "Video Encoder Help": "Advanced option. libx264 is the safest default. When a hardware encoder is selected, the app falls back to libx264 if the current FFmpeg, GPU, or driver cannot use it.",
+    "Video Subject Placeholder": "e.g. Top 10 AI Tools 2026, How to bake a chocolate cake, Crypto News Today",
+    "Video Script Placeholder": "AI will auto-generate the script based on your subject. Or you can write your own script here.\n\n💡 Example:\nArtificial Intelligence is changing the world faster than ever before. From ChatGPT to Midjourney, AI tools are revolutionizing how we work and create. In this video, we'll explore the top 10 AI tools you need to know in 2026...",
+    "API Key Placeholder": "e.g. sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+    "Base Url Placeholder": "e.g. https://api.openai.com/v1  (leave blank for default)",
+    "Model Name Placeholder": "e.g. gpt-4o, gpt-3.5-turbo, deepseek-chat",
+    "Groq Model Name Placeholder": "e.g. llama-3.3-70b-versatile",
+    "Secret Key Placeholder": "e.g. your-ernie-secret-key",
+    "Account ID Placeholder": "e.g. your-cloudflare-account-id",
+    "Pexels API Key Placeholder": "e.g. abc123def456...  (get from https://www.pexels.com/api/)",
+    "Pixabay API Key Placeholder": "e.g. 12345678-abc123def456...  (get from https://pixabay.com/api/docs/)"
   }
 }

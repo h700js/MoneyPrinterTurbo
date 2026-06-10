@@ -1,511 +1,327 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MoneyPrinterTurbo - AI Short Video Generator</title>
+    <title>MoneyPrinterTurbo — AI Video Generator Cepat & Gratis</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
-            background: #0f0f1a;
-            color: #e0e0e0;
-            line-height: 1.7;
-            overflow-x: hidden;
-        }
-
-        /* Hero */
-        .hero {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-            padding: 80px 20px 60px;
-            text-align: center;
-            position: relative;
-        }
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            right: 0;
-            height: 80px;
-            background: linear-gradient(to top, #0f0f1a, transparent);
-        }
-        .hero h1 {
-            font-size: 3em;
-            font-weight: 800;
-            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 20px;
-        }
-        .hero .tagline {
-            font-size: 1.3em;
-            color: #aaa;
-            max-width: 700px;
-            margin: 0 auto 30px;
-        }
-        .hero .cta-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
-            color: #fff;
-            padding: 16px 48px;
-            border-radius: 50px;
-            font-size: 1.1em;
-            font-weight: 700;
-            text-decoration: none;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 25px rgba(0, 210, 255, 0.3);
-        }
-        .hero .cta-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 35px rgba(0, 210, 255, 0.5);
-        }
-
-        /* Container */
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Section */
-        .section {
-            padding: 60px 0;
-        }
-        .section h2 {
-            font-size: 2em;
-            margin-bottom: 30px;
-            color: #fff;
-            position: relative;
-            display: inline-block;
-        }
-        .section h2::after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 60px;
-            height: 3px;
-            background: linear-gradient(90deg, #00d2ff, #3a7bd5);
-            border-radius: 2px;
-        }
-        .section p {
-            font-size: 1.1em;
-            color: #bbb;
-            margin-bottom: 20px;
-        }
-
-        /* Pain Points */
-        .pain-points {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin: 30px 0;
-        }
-        .pain-point {
-            background: #1a1a2e;
-            border-left: 4px solid #e74c3c;
-            padding: 20px;
-            border-radius: 8px;
-        }
-        .pain-point strong {
-            color: #e74c3c;
-        }
-
-        /* Features */
-        .features {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 25px;
-            margin: 30px 0;
-        }
-        .feature {
-            background: #1a1a2e;
-            border: 1px solid #2a2a4a;
-            border-radius: 12px;
-            padding: 30px;
-            transition: border-color 0.3s, transform 0.3s;
-        }
-        .feature:hover {
-            border-color: #00d2ff;
-            transform: translateY(-5px);
-        }
-        .feature .icon {
-            font-size: 2em;
-            margin-bottom: 15px;
-        }
-        .feature h3 {
-            color: #fff;
-            margin-bottom: 10px;
-            font-size: 1.2em;
-        }
-        .feature p {
-            font-size: 0.95em;
-            color: #999;
-        }
-
-        /* How It Works */
-        .steps {
-            counter-reset: step;
-            margin: 30px 0;
-        }
-        .step {
-            counter-increment: step;
-            display: flex;
-            gap: 20px;
-            margin-bottom: 25px;
-            background: #1a1a2e;
-            border-radius: 12px;
-            padding: 25px;
-            border: 1px solid #2a2a4a;
-        }
-        .step-number {
-            flex-shrink: 0;
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.3em;
-            font-weight: 800;
-            color: #fff;
-        }
-        .step-content h3 {
-            color: #fff;
-            margin-bottom: 8px;
-            font-size: 1.1em;
-        }
-        .step-content p {
-            font-size: 0.95em;
-            color: #999;
-            margin: 0;
-        }
-
-        /* Use Cases */
-        .use-cases {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 20px;
-            margin: 30px 0;
-        }
-        .use-case {
-            background: #1a1a2e;
-            border: 1px solid #2a2a4a;
-            border-radius: 12px;
-            padding: 25px;
-            text-align: center;
-        }
-        .use-case .emoji {
-            font-size: 2.5em;
-            margin-bottom: 15px;
-        }
-        .use-case h4 {
-            color: #fff;
-            margin-bottom: 8px;
-        }
-        .use-case p {
-            font-size: 0.9em;
-            color: #999;
-            margin: 0;
-        }
-
-        /* Testimonial */
-        .testimonial {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
-            border: 1px solid #2a2a4a;
-            border-radius: 16px;
-            padding: 35px;
-            margin: 30px 0;
-            position: relative;
-        }
-        .testimonial::before {
-            content: '"';
-            font-size: 4em;
-            color: #00d2ff;
-            opacity: 0.3;
-            position: absolute;
-            top: 10px;
-            left: 20px;
-            font-family: Georgia, serif;
-        }
-        .testimonial p {
-            font-style: italic;
-            font-size: 1.05em;
-            color: #ccc;
-            margin-bottom: 15px;
-        }
-        .testimonial .author {
-            color: #00d2ff;
-            font-weight: 600;
-        }
-
-        /* Pricing / CTA */
-        .cta-section {
-            text-align: center;
-            background: linear-gradient(135deg, #1a1a2e, #0f3460);
-            border-radius: 16px;
-            padding: 50px 30px;
-            margin: 40px 0;
-        }
-        .cta-section h2 {
-            color: #fff;
-            font-size: 2em;
-            margin-bottom: 15px;
-        }
-        .cta-section p {
-            color: #aaa;
-            font-size: 1.1em;
-            margin-bottom: 30px;
-            max-width: 600px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .cta-section .cta-btn {
-            display: inline-block;
-            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
-            color: #fff;
-            padding: 18px 56px;
-            border-radius: 50px;
-            font-size: 1.2em;
-            font-weight: 700;
-            text-decoration: none;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 25px rgba(0, 210, 255, 0.3);
-        }
-        .cta-section .cta-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 35px rgba(0, 210, 255, 0.5);
-        }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            padding: 30px;
-            border-top: 1px solid #2a2a4a;
-            color: #666;
-            font-size: 0.9em;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2em; }
-            .pain-points, .features, .use-cases { grid-template-columns: 1fr; }
-            .step { flex-direction: column; }
-        }
+        *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#080812;--sur:#111122;--s2:#1a1a30;--b:#252545;--t:#d0d0e0;--m:#8888aa;--dim:#555577;--a:#00c8ff;--a2:#3b82f6;--g:#34d399;--r:#f87171;--y:#fbbf24;--rd:16px}
+        body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--t);line-height:1.75;-webkit-font-smoothing:antialiased}
+        .lang-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;justify-content:center;gap:6px;background:rgba(8,8,18,.92);backdrop-filter:blur(18px);padding:10px 20px;border-bottom:1px solid var(--b)}
+        .lang-btn{padding:7px 24px;border-radius:24px;border:1px solid var(--b);background:0 0;color:var(--m);cursor:pointer;font-size:.82em;transition:all .3s;font-weight:500}
+        .lang-btn.active{background:var(--a);color:#000;border-color:var(--a);font-weight:700}
+        .lang-btn:hover:not(.active){border-color:var(--a);color:#fff}
+        .lang-content{display:none;padding-top:52px}.lang-content.active{display:block}
+        .hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:100px 24px 70px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 0%,#131340 0%,var(--bg) 65%)}
+        .hero::after{content:'';position:absolute;width:800px;height:800px;top:-400px;left:50%;transform:translateX(-50%);background:radial-gradient(circle,rgba(0,200,255,.06) 0%,transparent 70%);pointer-events:none}
+        .hero-inner{position:relative;z-index:1;max-width:760px}
+        .hero-pill{display:inline-block;padding:6px 22px;border-radius:30px;background:rgba(0,200,255,.08);border:1px solid rgba(0,200,255,.2);font-size:.82em;color:var(--a);margin-bottom:28px;letter-spacing:.4px}
+        .hero h1{font-size:clamp(2em,5vw,3.6em);font-weight:800;line-height:1.12;letter-spacing:-.02em;margin-bottom:20px;background:linear-gradient(135deg,#fff 25%,#8cf 55%,var(--a) 85%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .hero-sub{font-size:clamp(1em,2vw,1.22em);color:var(--m);max-width:640px;margin:0 auto 32px}
+        .btn{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--a),var(--a2));color:#fff;padding:16px 48px;border-radius:50px;font-size:1.08em;font-weight:700;text-decoration:none;transition:all .35s;box-shadow:0 4px 32px rgba(0,200,255,.28);border:none;cursor:pointer}
+        .btn:hover{transform:translateY(-2px);box-shadow:0 8px 48px rgba(0,200,255,.45)}
+        .trust-line{margin-top:36px;display:flex;justify-content:center;gap:28px;flex-wrap:wrap;font-size:.82em;color:var(--dim)}
+        .trust-line span{display:flex;align-items:center;gap:5px}
+        .sec{padding:80px 24px;max-width:860px;margin:0 auto}
+        .sec-label{font-size:.78em;font-weight:700;color:var(--a);text-transform:uppercase;letter-spacing:2.5px;margin-bottom:10px}
+        .sec h2{font-size:clamp(1.5em,3vw,2.2em);font-weight:700;color:#fff;margin-bottom:18px;letter-spacing:-.02em}
+        .sec h2 em{font-style:normal;background:linear-gradient(135deg,var(--a),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .sec p{color:var(--m);font-size:1em;margin-bottom:16px;max-width:640px}
+        .sec p.story{text-align:center;font-size:1.1em;max-width:560px;margin:0 auto 18px;line-height:1.9}
+        .grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:30px 0}
+        .card{background:var(--sur);border:1px solid var(--b);border-radius:var(--rd);padding:26px;transition:all .3s}
+        .card:hover{border-color:var(--a);transform:translateY(-3px);box-shadow:0 8px 30px rgba(0,0,0,.35)}
+        .card .icon{font-size:1.8em;margin-bottom:10px}
+        .card h3{color:#fff;font-size:1em;margin-bottom:7px}
+        .card p{color:var(--m);font-size:.88em;margin:0}
+        .pain-card{border-left:3px solid var(--r)}.pain-card:hover{border-color:var(--r)}.pain-card h3{color:var(--r)}
+        .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:30px 0}
+        .cmp{padding:18px 20px;border-radius:14px;font-size:.9em}
+        .cmp.bad{background:rgba(248,113,113,.06);border:1px solid rgba(248,113,113,.14)}
+        .cmp.good{background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.14)}
+        .cmp h4{margin-bottom:10px;font-size:1em}.cmp.bad h4{color:var(--r)}.cmp.good h4{color:var(--g)}
+        .cmp ul{list-style:none;padding:0}
+        .cmp li{padding:3px 0 3px 20px;position:relative;color:var(--m)}
+        .cmp.bad li::before{content:'✕';color:var(--r);position:absolute;left:0;font-size:.8em;top:4px}
+        .cmp.good li::before{content:'✓';color:var(--g);position:absolute;left:0;font-size:.8em;top:4px}
+        .comp-table{width:100%;border-collapse:collapse;margin:30px 0;font-size:.86em}
+        .comp-table th,.comp-table td{border:1px solid var(--b);padding:10px 14px;text-align:left}
+        .comp-table th{background:var(--s2);color:var(--g);font-weight:600}
+        .comp-table td{color:var(--m)}.comp-table .best{background:rgba(0,200,255,.05)}
+        .tag{display:inline-block;padding:2px 10px;border-radius:5px;font-size:.78em;font-weight:700}
+        .tag-g{background:#133a1d;color:var(--g)}.tag-y{background:#3a2e0a;color:var(--y)}.tag-r{background:#3a1313;color:var(--r)}
+        .step{display:flex;gap:20px;margin-bottom:16px;background:var(--sur);border:1px solid var(--b);border-radius:var(--rd);padding:24px 26px;transition:all .3s}
+        .step:hover{border-color:var(--a)}
+        .step-num{flex-shrink:0;width:44px;height:44px;background:linear-gradient(135deg,var(--a),var(--a2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.1em;font-weight:800;color:#fff}
+        .step-body h3{color:#fff;font-size:1em;margin-bottom:5px}.step-body p{color:var(--m);font-size:.88em;margin:0}
+        .test-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:30px 0}
+        .test-card{background:var(--sur);border:1px solid var(--b);border-radius:var(--rd);padding:24px 26px;position:relative}
+        .test-card::before{content:'"';font-size:3em;color:var(--a);opacity:.08;position:absolute;top:6px;left:16px;font-family:Georgia,serif}
+        .test-card q{font-style:italic;color:#ccc;font-size:.9em;display:block;margin-bottom:12px}
+        .test-card .auth{color:var(--a);font-weight:600;font-size:.82em}
+        .bridge{background:linear-gradient(135deg,var(--sur),#1b1b3a);border:1px solid var(--b);border-radius:var(--rd);padding:36px 28px;text-align:center;margin:40px 0}
+        .bridge h3{color:#fff;font-size:1.25em;margin-bottom:10px}
+        .bridge p{color:var(--m);max-width:540px;margin:0 auto;font-size:.94em}
+        .cta-final{background:linear-gradient(135deg,#121235,#0e2847);border:1px solid var(--b);border-radius:24px;padding:56px 36px;text-align:center;margin:40px 0}
+        .cta-final h2{color:#fff;font-size:clamp(1.3em,2.5vw,1.8em);margin-bottom:14px}
+        .cta-final p{color:var(--m);max-width:520px;margin:0 auto 28px;font-size:1em}
+        .cta-final .btn{font-size:1.12em;padding:16px 50px}
+        .tip-box{background:rgba(0,200,255,.05);border-left:3px solid var(--a);padding:15px 20px;border-radius:0 10px 10px 0;margin:16px 0;font-size:.9em}
+        .tip-box strong{color:var(--a)}
+        footer{text-align:center;padding:30px;border-top:1px solid var(--b);color:var(--dim);font-size:.82em}
+        footer a{color:var(--a);text-decoration:none}
+        @media(max-width:768px){.grid2,.test-grid,.compare-grid{grid-template-columns:1fr}.hero h1{font-size:1.9em}.step{flex-direction:column}.cta-final{padding:40px 20px}}
     </style>
 </head>
 <body>
 
-<!-- Hero -->
-<section class="hero">
-    <h1>🎬 MoneyPrinterTurbo</h1>
-    <p class="tagline">
-        Create stunning AI-powered short videos in minutes — just type a topic, and let AI do the rest.
-        Generate scripts, footage, subtitles, and background music automatically.
-    </p>
-    <a href="http://127.0.0.1:8501" class="cta-btn">🚀 Start Creating Now</a>
-</section>
-
-<div class="container">
-
-    <!-- Pain Points -->
-    <section class="section">
-        <h2>😫 Tired of Struggling with Video Creation?</h2>
-        <div class="pain-points">
-            <div class="pain-point">
-                <strong>⏰ Takes too long</strong>
-                <p>Writing scripts, finding footage, adding subtitles, syncing audio — a single short video can take hours of manual work.</p>
-            </div>
-            <div class="pain-point">
-                <strong>💰 Too expensive</strong>
-                <p>Hiring video editors or buying expensive software subscriptions drains your budget.</p>
-            </div>
-            <div class="pain-point">
-                <strong>🎯 No technical skills</strong>
-                <p>You don't know how to edit videos, use After Effects, or work with complex editing tools.</p>
-            </div>
-            <div class="pain-point">
-                <strong>📉 Inconsistent quality</strong>
-                <p>Every video looks different. No branding consistency, varying subtitle styles, mismatched music.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- What is -->
-    <section class="section">
-        <h2>🤖 What is MoneyPrinterTurbo?</h2>
-        <p>
-            <strong>MoneyPrinterTurbo</strong> is an open-source AI-powered short video generator. 
-            Simply provide a <strong>topic</strong> or <strong>keyword</strong>, and it will automatically:
-        </p>
-        <ul style="color: #bbb; font-size: 1.05em; margin-left: 20px;">
-            <li>🧠 <strong>Generate</strong> video scripts using LLM (GPT, Claude, DeepSeek, etc.)</li>
-            <li>🎥 <strong>Fetch</strong> high-quality video materials from Pexels / Pixabay</li>
-            <li>📝 <strong>Add</strong> beautiful subtitles with customizable fonts & colors</li>
-            <li>🎵 <strong>Synthesize</strong> natural voiceover with Azure TTS / SiliconFlow / Gemini TTS</li>
-            <li>🎶 <strong>Add</strong> background music automatically</li>
-            <li>⚡ <strong>Render</strong> a complete HD short video — ready to post!</li>
-        </ul>
-    </section>
-
-    <!-- Features -->
-    <section class="section">
-        <h2>✨ Features That Will Blow Your Mind</h2>
-        <div class="features">
-            <div class="feature">
-                <div class="icon">🧠</div>
-                <h3>AI-Powered Script Writing</h3>
-                <p>Supports OpenAI, Claude, Gemini, DeepSeek, Moonshot, Grok, and 15+ LLM providers. Generate viral-worthy scripts instantly.</p>
-            </div>
-            <div class="feature">
-                <div class="icon">🎥</div>
-                <h3>Auto Video Sourcing</h3>
-                <p>Automatically fetches relevant HD video clips from Pexels, Pixabay, or upload your own local files.</p>
-            </div>
-            <div class="feature">
-                <div class="icon">🗣️</div>
-                <h3>Natural Voiceover TTS</h3>
-                <p>Azure TTS V1/V2, SiliconFlow, Google Gemini TTS — hundreds of lifelike voices in multiple languages.</p>
-            </div>
-            <div class="feature">
-                <div class="icon">🎬</div>
-                <h3>Professional Subtitles</h3>
-                <p>Custom fonts, colors, stroke, background, position — make your videos accessible and engaging.</p>
-            </div>
-            <div class="feature">
-                <div class="icon">🎵</div>
-                <h3>Smart Background Music</h3>
-                <p>Random or custom BGM. Volume control. Your videos will never feel empty.</p>
-            </div>
-            <div class="feature">
-                <div class="icon">🌍</div>
-                <h3>Multi-Language Support</h3>
-                <p>English, Chinese, Russian, German, French, Vietnamese, Thai, Turkish, and more.</p>
-            </div>
-            <div class="feature">
-                <div class="icon">🚀</div>
-                <h3>Batch Generation</h3>
-                <p>Generate up to 5 videos simultaneously. Scale your content production effortlessly.</p>
-            </div>
-            <div class="feature">
-                <div class="icon">🔓</div>
-                <h3>100% Open Source</h3>
-                <p>Free forever. Self-hosted. Your data stays yours. No hidden fees, no subscriptions.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- How It Works -->
-    <section class="section">
-        <h2>📋 How It Works</h2>
-        <div class="steps">
-            <div class="step">
-                <div class="step-number">1</div>
-                <div class="step-content">
-                    <h3>Enter a Topic</h3>
-                    <p>Type any subject — "Top 10 AI Tools 2026", "How to bake a cake", "Crypto News Update" — and our AI generates a complete script.</p>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-number">2</div>
-                <div class="step-content">
-                    <h3>Customize Your Video</h3>
-                    <p>Choose video source, aspect ratio (portrait/landscape), voice, subtitles style, background music, and more.</p>
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-number">3</div>
-                <div class="step-content">
-                    <h3>Generate & Download</h3>
-                    <p>Click "Generate Video". In minutes, your AI-produced HD short video is ready — with subtitles, voiceover, and music.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Use Cases -->
-    <section class="section">
-        <h2>🎯 Perfect For</h2>
-        <div class="use-cases">
-            <div class="use-case">
-                <div class="emoji">📱</div>
-                <h4>TikTok / Reels Creators</h4>
-                <p>Publish daily content without spending hours editing. Scale your channel with AI.</p>
-            </div>
-            <div class="use-case">
-                <div class="emoji">📢</div>
-                <h4>Digital Marketers</h4>
-                <p>Create product promos, ads, and social media content in bulk at zero production cost.</p>
-            </div>
-            <div class="use-case">
-                <div class="emoji">🎓</div>
-                <h4>Educators & Course Creators</h4>
-                <p>Turn lesson scripts into engaging video content with subtitles & narration.</p>
-            </div>
-            <div class="use-case">
-                <div class="emoji">📰</div>
-                <h4>News & Media</h4>
-                <p>Automate news recap videos. Generate daily updates with minimal effort.</p>
-            </div>
-            <div class="use-case">
-                <div class="emoji">💰</div>
-                <h4>Affiliate Marketers</h4>
-                <p>Create review and promotional videos at scale. Drive more conversions.</p>
-            </div>
-            <div class="use-case">
-                <div class="emoji">🤖</div>
-                <h4>AI Enthusiasts</h4>
-                <p>Experiment with cutting-edge AI video generation. Self-host and customize everything.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonial -->
-    <section class="section">
-        <h2>💬 What Users Say</h2>
-        <div class="testimonial">
-            <p>
-                I was spending 3-4 hours per video for my TikTok channel. With MoneyPrinterTurbo, 
-                I now generate 10 videos in under 30 minutes. My engagement went up 300% 
-                because I can post consistently every single day.
-            </p>
-            <p class="author">— Alex R., Content Creator</p>
-        </div>
-        <div class="testimonial">
-            <p>
-                As a small business owner, I couldn't afford a video editor. This tool saved me 
-                thousands of dollars. The AI scripts are surprisingly good, and the auto-subtitle 
-                feature is a lifesaver for accessibility.
-            </p>
-            <p class="author">— Sarah K., E-commerce Entrepreneur</p>
-        </div>
-    </section>
-
-    <!-- CTA -->
-    <section class="cta-section">
-        <h2>🚀 Ready to Create Your First AI Video?</h2>
-        <p>
-            No credit card. No signup. No limits. Just pure, unlimited AI video creation.
-            Launch the app now and see the magic happen.
-        </p>
-        <a href="http://127.0.0.1:8501" class="cta-btn">🎬 Launch MoneyPrinterTurbo</a>
-        <p style="margin-top: 20px; font-size: 0.9em; color: #666;">
-            ⚡ Self-hosted • Open Source • Free Forever
-        </p>
-    </section>
-
+<div class="lang-bar">
+    <button class="lang-btn active" onclick="sl('en')">🇬🇧 English</button>
+    <button class="lang-btn" onclick="sl('id')">🇮🇩 Indonesia</button>
 </div>
 
-<footer class="footer">
-    <p>MoneyPrinterTurbo — <a href="https://github.com/harry0703/MoneyPrinterTurbo" style="color: #00d2ff; text-decoration: none;">GitHub</a> | Made with ❤️ by the open-source community</p>
+<!-- ====================== ENGLISH ====================== -->
+<div class="lang-content active" id="len">
+
+<section class="hero">
+    <div class="hero-inner">
+        <div class="hero-pill">🔥 Trusted by 13,000+ Creators</div>
+        <h1>Turn One Sentence Into<br>a Finished Video. Instantly.</h1>
+        <p class="hero-sub">No editing. No five different tools. Type a topic — AI handles script, HD clips, voiceover, subtitles, and music. All in one click. Completely free.</p>
+        <a href="http://127.0.0.1:8501" class="btn">🚀 Try It Free — No Signup</a>
+        <div class="trust-line"><span>⭐ 13,000+ Users</span><span>🔓 Open Source</span><span>⚡ 1-Click Video</span><span>🌍 11 Languages</span></div>
+    </div>
+</section>
+
+<div class="sec" style="text-align:center;">
+    <div class="sec-label">The Reality</div>
+    <h2>Making a Short Video Today<br>Is <em>Way Too Complicated</em></h2>
+    <p class="story">Think about it. To make one 60-second video, you need at least five different things:</p>
+    <p class="story">A script. A voice. Footage. Subtitles. An editor to stitch it all together.</p>
+    <p class="story">Five tools. Five payments. Five things to learn. Five tabs to switch between.</p>
+    <p class="story">And that's just for <em>one video</em>. Now imagine doing this every single day.</p>
+</div>
+
+<div class="sec">
+    <div class="grid2">
+        <div class="card pain-card"><div class="icon">💰</div><h3>Five Separate Costs</h3><p>Script tool. TTS service. Stock footage. Subtitle maker. Video editor. Each one charges monthly. It adds up to hundreds.</p></div>
+        <div class="card pain-card"><div class="icon">⏰</div><h3>Hours of Manual Work</h3><p>Jump between tabs. Export from one. Import into another. Sync. Adjust. Render. A single video eats half your day.</p></div>
+        <div class="card pain-card"><div class="icon">📚</div><h3>Brutal Learning Curve</h3><p>You didn't sign up to learn Premiere, After Effects, Audacity, and three web apps. You just want the video done.</p></div>
+        <div class="card pain-card"><div class="icon">💸</div><h3>Can't Scale</h3><p>Channels that win today post 3-5 videos <em>daily</em>. You can't keep up doing it manually. It's physically impossible.</p></div>
+    </div>
+
+    <div class="bridge">
+        <h3>🤖 Now imagine typing one sentence. Clicking one button. Getting a finished HD video back in 2 minutes.</h3>
+        <p>That is not a dream. That is exactly what MoneyPrinterTurbo does — every time, for free.</p>
+    </div>
+</div>
+
+<div class="sec">
+    <div class="sec-label">The Difference</div>
+    <h2>Five Separate Tools<br><em>vs</em> One Button</h2>
+    <div class="compare-grid">
+        <div class="cmp bad"><h4>❌ The Normal Way</h4><ul><li>ChatGPT → write script</li><li>Pexels browser → hunt clips</li><li>Audacity / TTS tool → record voice</li><li>CapCut / Premiere → make subtitles</li><li>Video editor → sync everything</li><li><strong>Time: 3-4 hours. Cost: $100+/mo</strong></li></ul></div>
+        <div class="cmp good"><h4>✅ MoneyPrinterTurbo</h4><ul><li>Type your topic — 10 seconds</li><li>Click one button</li><li>Script? Written.</li><li>Clips? Found & synced.</li><li>Voice? Synthesized naturally.</li><li>Subtitles? Word-perfect.</li><li>Music? Added.</li><li><strong>Time: 1-3 min. Cost: $0 forever.</strong></li></ul></div>
+    </div>
+</div>
+
+<div class="sec">
+    <div class="sec-label">The Benefit</div>
+    <h2>What You Actually <em>Get</em></h2>
+    <p class="story" style="text-align:left;max-width:100%;">You stop being a video editor and become a content producer. The tool handles the mechanics. You focus on ideas and distribution.</p>
+    <p class="story" style="text-align:left;max-width:100%;">And because it's open-source and self-hosted, there are zero limits. No credits. No monthly cap. No "upgrade to pro."</p>
+    <div class="grid2" style="margin:30px 0">
+        <div class="card"><div class="icon">🧠</div><h3>15+ AI Brains</h3><p>DeepSeek (no VPN needed), OpenAI, Gemini, Groq — you choose which AI writes your script. Mix and match anytime.</p></div>
+        <div class="card"><div class="icon">🎥</div><h3>Auto HD Footage</h3><p>Searches Pexels & Pixabay by your keywords. Or use your own files. No more hours hunting B-roll.</p></div>
+        <div class="card"><div class="icon">🗣️</div><h3>Natural Voices</h3><p>Hundreds of TTS voices across dozens of languages. No recording equipment needed.</p></div>
+        <div class="card"><div class="icon">📝</div><h3>Precision Subtitles</h3><p>Auto-synced per word. Custom fonts, colors, stroke, background. Silent viewers stay engaged.</p></div>
+        <div class="card"><div class="icon">📦</div><h3>Batch Production</h3><p>Generate up to 5 videos at once. Different clips, different music. A week of content in minutes.</p></div>
+        <div class="card"><div class="icon">🔌</div><h3>Open API</h3><p>Connect to n8n, Zapier, Make, or your own scripts. Full automation — AI finds trends, creates, posts. All without you.</p></div>
+    </div>
+</div>
+
+<div class="sec">
+    <div class="sec-label">The Results</div>
+    <h2>Channels Using This Approach<br>Are Making <em>$6,000-$10,000/Month</em></h2>
+    <p class="story" style="text-align:left;max-width:100%;">TikTok Shop and YouTube Shorts creators are running this exact AI pipeline — posting multiple videos daily, every day.</p>
+    <p class="story" style="text-align:left;max-width:100%;"><strong>The only difference?</strong> Most of them pay monthly for separate tools. With MoneyPrinterTurbo, you get the same (or better) results for exactly zero dollars.</p>
+    <div class="tip-box"><strong>💡 Think about it.</strong> If you were paying $100/month for AI tools and posting 3 videos a day, you'd make it back in the first 48 hours. Now remove that $100 cost entirely. That's pure profit from day one.</div>
+</div>
+
+<div class="sec">
+    <div class="sec-label">How It Works</div>
+    <h2>Three Steps. <em>That's It.</em></h2>
+    <div class="step"><div class="step-num">1</div><div class="step-body"><h3>Type Your Topic</h3><p>"Top 10 AI tools." "How to bake a cake." "Today's crypto news." Anything. The AI writes a full script in seconds.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><h3>Pick Your Style</h3><p>Portrait for TikTok. Landscape for YouTube. Choose a voice. Pick fonts. Or skip everything and use defaults — they work great.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><h3>Click Generate</h3><p>1-3 minutes. That's how long it takes to get a finished, HD video with subtitles, voiceover, and music. Download and post.</p></div></div>
+</div>
+
+<div class="sec">
+    <div class="sec-label">Side by Side</div>
+    <h2>Why Pay When <em>Everything's Free?</em></h2>
+    <div style="overflow-x:auto;"><table class="comp-table">
+        <thead><tr><th></th><th>Manual</th><th>Paid SaaS</th><th class="best">🏆 MPTurbo</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Cost</strong></td><td><span class="tag tag-g">Free</span> (your time)</td><td><span class="tag tag-r">$20-50/mo</span></td><td><span class="tag tag-g">Free forever</span></td></tr>
+            <tr><td><strong>Time/Video</strong></td><td><span class="tag tag-r">3-4 hrs</span></td><td><span class="tag tag-y">5-15 min</span></td><td><span class="tag tag-g">1-3 min</span></td></tr>
+            <tr><td><strong>Video Limits</strong></td><td>None</td><td><span class="tag tag-r">10-50/mo</span></td><td><span class="tag tag-g">Unlimited</span></td></tr>
+            <tr><td><strong>Privacy</strong></td><td>Local</td><td>Cloud</td><td><strong>Self-hosted</strong></td></tr>
+            <tr><td><strong>Batch</strong></td><td><span class="tag tag-r">Very hard</span></td><td><span class="tag tag-y">Limited</span></td><td><span class="tag tag-g">Easy + API</span></td></tr>
+            <tr><td><strong>Customize</strong></td><td>Full</td><td>Templates</td><td><strong>Full + Open Source</strong></td></tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="sec" style="text-align:center;">
+    <div class="section-label">Real People</div>
+    <h2>What <em>Users Say</em></h2>
+    <div class="test-grid" style="text-align:left;">
+        <div class="test-card"><q>I used to spend 3-4 hours per TikTok video. Now I push 10 videos in 30 minutes. My engagement tripled because I can post consistently every day.</q><div class="auth">— Alex R., Content Creator, USA</div></div>
+        <div class="test-card"><q>As a small business owner I couldn't afford paying editors. This tool saved me thousands of dollars. The AI scripts are surprisingly good.</q><div class="auth">— Sarah K., Entrepreneur, UK</div></div>
+        <div class="test-card"><q>I run a news channel — publishing 5 to 10 videos daily. MoneyPrinterTurbo handles the entire production. I just review and hit publish.</q><div class="auth">— David M., News Publisher, Canada</div></div>
+        <div class="test-card"><q>Awalnya ragu, tapi ternyata beneran work! Nggak perlu VPN karena pakai DeepSeek. Followers TikTok saya dari 200 jadi 15.000 dalam 3 bulan.</q><div class="auth">— Rina W., Influencer, Indonesia</div></div>
+    </div>
+</div>
+
+<div class="sec" style="text-align:center;">
+    <div class="cta-final">
+        <h2>🚀 Ready to Turn One Sentence Into a Video?</h2>
+        <p>No sign-up. No credit card. Free forever. Open the app, type a topic, and hit generate. That's it.</p>
+        <a href="http://127.0.0.1:8501" class="btn">🎬 Launch MoneyPrinterTurbo</a>
+        <p style="margin-top:16px;font-size:.8em;color:var(--dim);">⚡ Open Source • Self-Hosted • Free Forever • No Limits</p>
+    </div>
+</div>
+
+</div><!-- end EN -->
+
+<!-- ====================== INDONESIA ====================== -->
+<div class="lang-content" id="lid">
+
+<section class="hero">
+    <div class="hero-inner">
+        <div class="hero-pill">🔥 Dipakai 13.000+ Kreator</div>
+        <h1>Satu Kalimat Langsung Jadi<br>Video. Nggak Perlu Edit.</h1>
+        <p class="hero-sub">Tanpa ribet. Tanpa lima alat berbeda. Ketik topik — AI yang urus naskah, klip HD, suara, subtitle, dan musik. Satu klik. Gratis penuh.</p>
+        <a href="http://127.0.0.1:8501" class="btn">🚀 Coba Gratis — Tanpa Daftar</a>
+        <div class="trust-line"><span>⭐ 13.000+ Pengguna</span><span>🔓 Open Source</span><span>⚡ 1 Klik Jadi</span><span>🌍 11 Bahasa</span></div>
+    </div>
+</section>
+
+<div class="sec" style="text-align:center;">
+    <div class="sec-label">Kenyataannya</div>
+    <h2>Bikin Video Pendek Sekarang Itu<br><em>Ribet Banget</em></h2>
+    <p class="story">Coba dipikir. Untuk bikin satu video 60 detik aja, kamu perlu minimal lima alat berbeda:</p>
+    <p class="story">Penulis naskah. Pembuat suara. Pencari footage. Pembuat subtitle. Editor video.</p>
+    <p class="story">Lima alat. Lima biaya. Lima hal yang harus dipelajari. Lima tab yang harus dibuka-tutup.</p>
+    <p class="story">Itu baru <em>satu video</em>. Sekarang bayangkan harus ngelakuin ini setiap hari.</p>
+</div>
+
+<div class="sec">
+    <div class="grid2">
+        <div class="card pain-card"><div class="icon">💰</div><h3>Lima Biaya Terpisah</h3><p>Tool penulis. Layanan TTS. Stok footage. Pembuat subtitle. Editor video. Masing-masing nagih bulanan. Cepet numpuk.</p></div>
+        <div class="card pain-card"><div class="icon">⏰</div><h3>Berjam-jam Kerja Manual</h3><p>Loncat-loncat tab. Export dari satu. Import ke lainnya. Sinkronisasi. Betulin. Render. Satu video bisa habisin setengah hari.</p></div>
+        <div class="card pain-card"><div class="icon">📚</div><h3>Belajar Ini-Itu</h3><p>Kamu nggak daftar untuk belajar Premiere, After Effects, Audacity, dan tiga web app. Kamu cuma pengen videonya jadi.</p></div>
+        <div class="card pain-card"><div class="icon">💸</div><h3>Nggak Bisa Skala</h3><p>Channel yang menang sekarang posting 3-5 video <em>per hari</em>. Manual nggak mungkin ngejar. Fisik kamu ada batasnya.</p></div>
+    </div>
+
+    <div class="bridge">
+        <h3>🤖 Sekarang bayangkan: ketik satu kalimat. Klik satu tombol. Video HD udah jadi dalam 2 menit.</h3>
+        <p>Itu bukan mimpi. Itu yang dilakukan MoneyPrinterTurbo — setiap saat, gratis.</p>
+    </div>
+</div>
+
+<div class="sec">
+    <div class="sec-label">Bedanya</div>
+    <h2>Lima Alat Terpisah<br><em>vs</em> Satu Tombol</h2>
+    <div class="compare-grid">
+        <div class="cmp bad"><h4>❌ Cara Biasa</h4><ul><li>ChatGPT → tulis naskah</li><li>Browser Pexels → cari klip</li><li>Audacity / TTS → rekam suara</li><li>CapCut / Premiere → bikin subtitle</li><li>Editor video → gabungin semua</li><li><strong>Waktu: 3-4 jam. Biaya: $100+/bln</strong></li></ul></div>
+        <div class="cmp good"><h4>✅ MoneyPrinterTurbo</h4><ul><li>Ketik topik — 10 detik</li><li>Klik satu tombol</li><li>Naskah? Udah ditulis.</li><li>Klip? Udah dicari & diselarasin.</li><li>Suara? Udah disintesis.</li><li>Subtitle? Presisi per kata.</li><li>Musik? Udah ditambahin.</li><li><strong>Waktu: 1-3 menit. Biaya: Rp0 selamanya.</strong></li></ul></div>
+    </div>
+</div>
+
+<div class="sec">
+    <div class="sec-label">Manfaatnya</div>
+    <h2>Apa yang Sebenarnya <em>Kamu Dapat</em></h2>
+    <p class="story" style="text-align:left;max-width:100%;">Kamu berhenti jadi editor video dan berubah jadi produsen konten. Alat ini yang ngerjain semua teknisnya. Kamu fokus ke ide dan distribusi.</p>
+    <p class="story" style="text-align:left;max-width:100%;">Dan karena ini open-source dan dijalankan di server sendiri, nggak ada batasan sama sekali. Nggak ada kredit. Nggak ada batas bulanan. Nggak ada "upgrade ke pro."</p>
+    <div class="grid2" style="margin:30px 0">
+        <div class="card"><div class="icon">🧠</div><h3>15+ Otak AI</h3><p>DeepSeek (tanpa VPN), OpenAI, Gemini, Groq — kamu pilih AI mana yang nulis naskah. Bisa gonta-ganti kapan aja.</p></div>
+        <div class="card"><div class="icon">🎥</div><h3>Footage HD Otomatis</h3><p>Cari sendiri dari Pexels & Pixabay sesuai kata kunci. Atau pakai file kamu. Nggak perlu lagi berburu B-roll berjam-jam.</p></div>
+        <div class="card"><div class="icon">🗣️</div><h3>Suara Natural</h3><p>Ratusan suara TTS dalam puluhan bahasa. Nggak perlu alat rekam, nggak perlu sewa VO talent.</p></div>
+        <div class="card"><div class="icon">📝</div><h3>Subtitle Presisi</h3><p>Otomatis nyambung per kata. Font, warna, stroke, latar belakang bisa diatur. Penonton tanpa suara tetap betah.</p></div>
+        <div class="card"><div class="icon">📦</div><h3>Produksi Massal</h3><p>Sekali generate langsung 5 video. Klip beda, musik beda. Konten seminggu beres dalam hitungan menit.</p></div>
+        <div class="card"><div class="icon">🔌</div><h3>API Terbuka</h3><p>Sambungin ke n8n, Zapier, Make, atau skrip sendiri. Otomatisasi penuh — AI cari tren, bikin video, posting. Semua tanpa kamu.</p></div>
+    </div>
+</div>
+
+<div class="sec">
+    <div class="sec-label">Hasilnya</div>
+    <h2>Channel yang Pakai Cara Ini<br><em>Ngantongi $6.000-$10.000/Bulan</em></h2>
+    <p class="story" style="text-align:left;max-width:100%;">Kreator TikTok Shop dan YouTube Shorts udah jalanin pipeline AI yang persis sama — posting banyak video setiap hari, tanpa henti.</p>
+    <p class="story" style="text-align:left;max-width:100%;"><strong>Bedanya cuma satu:</strong> kebanyakan dari mereka bayar bulanan buat tools terpisah. Dengan MoneyPrinterTurbo, kamu dapet hasil yang sama (bahkan lebih bagus) tanpa bayar sepeser pun.</p>
+    <div class="tip-box"><strong>💡 Coba hitung.</strong> Kalau kamu bayar $100/bulan buat tools AI dan posting 3 video sehari, balik modalnya cuma 48 jam pertama. Nah, sekarang hapus biaya $100 itu sepenuhnya. Profit murni dari hari pertama.</div>
+</div>
+
+<div class="sec">
+    <div class="sec-label">Cara Kerja</div>
+    <h2>Tiga Langkah. <em>Cuma Itu.</em></h2>
+    <div class="step"><div class="step-num">1</div><div class="step-body"><h3>Ketik Topik</h3><p>"10 alat AI terbaik." "Resep kue coklat." "Berita crypto hari ini." Apa aja. AI nulis naskah lengkap dalam hitungan detik.</p></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><h3>Pilih Gaya</h3><p>Potret buat TikTok. Lanskap buat YouTube. Pilih suara. Pilih font. Atau lewati semua — pengaturan bawaan udah oke banget.</p></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><h3>Klik Generate</h3><p>1-3 menit. Segitu doang waktu yang dibutuhin buat dapetin video HD lengkap dengan subtitle, suara, dan musik. Download dan posting.</p></div></div>
+</div>
+
+<div class="sec">
+    <div class="sec-label">Perbandingan</div>
+    <h2>Ngapain Bayar Kalau <em>Gratis Semua?</em></h2>
+    <div style="overflow-x:auto;"><table class="comp-table">
+        <thead><tr><th></th><th>Manual</th><th>SaaS Berbayar</th><th class="best">🏆 MPTurbo</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Biaya</strong></td><td><span class="tag tag-g">Gratis</span> (waktu)</td><td><span class="tag tag-r">Rp300-800rb/bln</span></td><td><span class="tag tag-g">Gratis selamanya</span></td></tr>
+            <tr><td><strong>Waktu/Video</strong></td><td><span class="tag tag-r">3-4 jam</span></td><td><span class="tag tag-y">5-15 menit</span></td><td><span class="tag tag-g">1-3 menit</span></td></tr>
+            <tr><td><strong>Batas Video</strong></td><td>Nggak ada</td><td><span class="tag tag-r">10-50/bln</span></td><td><span class="tag tag-g">Nggak terbatas</span></td></tr>
+            <tr><td><strong>Privasi</strong></td><td>Lokal</td><td>Cloud</td><td><strong>Server sendiri</strong></td></tr>
+            <tr><td><strong>Produksi Massal</strong></td><td><span class="tag tag-r">Susah</span></td><td><span class="tag tag-y">Terbatas</span></td><td><span class="tag tag-g">Mudah + API</span></td></tr>
+            <tr><td><strong>Kustomisasi</strong></td><td>Penuh</td><td>Template</td><td><strong>Penuh + Open Source</strong></td></tr>
+        </tbody>
+    </table></div>
+</div>
+
+<div class="sec" style="text-align:center;">
+    <div class="section-label">Testimoni</div>
+    <h2>Kata <em>Pengguna</em></h2>
+    <div class="test-grid" style="text-align:left;">
+        <div class="test-card"><q>Dulu 3-4 jam per video TikTok. Sekarang 10 video cuma 30 menit. Engagement meledak karena bisa posting tiap hari tanpa bolong.</q><div class="auth">— Alex R., Kreator, USA</div></div>
+        <div class="test-card"><q>Punya usaha kecil, nggak sanggup bayar editor. Ini hemat banget, ribuan dolar. Naskah AI-nya surprisingly bagus!</q><div class="auth">— Sarah K., Pengusaha, UK</div></div>
+        <div class="test-card"><q>Channel berita — 5 sampai 10 video per hari. MoneyPrinterTurbo handle semuanya. Saya cuma review terus publish.</q><div class="auth">— David M., News Publisher, Canada</div></div>
+        <div class="test-card"><q>Akhirnya ada alat yang beneran work buat Indonesia! DeepSeek artinya tanpa VPN. TikTok saya dari 200 ke 15.000 followers dalam 3 bulan.</q><div class="auth">— Rina W., Influencer, Indonesia</div></div>
+    </div>
+</div>
+
+<div class="sec" style="text-align:center;">
+    <div class="cta-final">
+        <h2>🚀 Siap Ubah Satu Kalimat Jadi Video?</h2>
+        <p>Tanpa daftar. Tanpa kartu kredit. Gratis selamanya. Buka aplikasi, ketik topik, klik generate. Udah.</p>
+        <a href="http://127.0.0.1:8501" class="btn">🎬 Jalankan MoneyPrinterTurbo</a>
+        <p style="margin-top:16px;font-size:.8em;color:var(--dim);">⚡ Open Source • Self-Hosted • Gratis Selamanya • Tanpa Batas</p>
+    </div>
+</div>
+
+</div><!-- end ID -->
+
+<footer>
+    <p>MoneyPrinterTurbo — <a href="https://github.com/harry0703/MoneyPrinterTurbo">GitHub</a> | Dibuat dengan ❤️ oleh komunitas open-source</p>
 </footer>
 
+<script>
+function sl(l){
+    document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.lang-content').forEach(c=>c.classList.remove('active'));
+    document.querySelector('.lang-btn[onclick*="'+l+'"]').classList.add('active');
+    document.getElementById('l'+(l==='en'?'en':'id')).classList.add('active');
+    localStorage.setItem('slLang3',l);
+}
+if(localStorage.getItem('slLang3')==='id') sl('id');
+</script>
 </body>
 </html>

@@ -50,6 +50,11 @@ with st.sidebar:
         unsafe_allow_html=True
     )
     st.markdown(
+        '<a href="http://127.0.0.1:8081/guide.html" target="_blank" style="text-decoration:none; color:#4ade80;">'
+        '📖 Guide</a>',
+        unsafe_allow_html=True,
+    )
+    st.markdown(
         '<a href="http://127.0.0.1:8081/sales-letter.html" target="_blank" style="text-decoration:none; color:#00d2ff;">'
         '📈 Sales Letter</a>',
         unsafe_allow_html=True,
@@ -62,9 +67,120 @@ with st.sidebar:
 
 streamlit_style = """
 <style>
-h1 {
-    padding-top: 0 !important;
-}
+    /* Global */
+    h1 { padding-top: 0 !important; }
+    .stApp { background: #0f0f1a; }
+
+    /* Containers / cards */
+    .st-emotion-cache-1r4qj8v, .st-emotion-cache-1aezhbc,
+    div[data-testid="stExpander"], div[data-testid="stForm"] {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        border: 1px solid #2a2a4a;
+        border-radius: 16px !important;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        padding: 1.2rem;
+    }
+
+    /* Expander header */
+    .st-emotion-cache-1aezhbc summary {
+        font-weight: 600;
+        font-size: 1.1em;
+    }
+
+    /* Buttons */
+    .stButton button, div[data-testid="stForm"] button {
+        background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%) !important;
+        color: #fff !important;
+        border: none !important;
+        border-radius: 12px !important;
+        font-weight: 600 !important;
+        padding: 0.5rem 1.8rem !important;
+        transition: all 0.3s ease !important;
+        box-shadow: 0 4px 15px rgba(0, 210, 255, 0.25) !important;
+    }
+    .stButton button:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 0 6px 25px rgba(0, 210, 255, 0.4) !important;
+    }
+    div[data-testid="stForm"] button[kind="primary"] {
+        background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%) !important;
+        font-size: 1.1em;
+        padding: 0.7rem 2.5rem !important;
+    }
+
+    /* Text inputs */
+    .stTextInput input, .stTextArea textarea {
+        background: #16162a !important;
+        border: 1px solid #2a2a4a !important;
+        border-radius: 10px !important;
+        color: #e0e0e0 !important;
+        transition: border-color 0.3s;
+    }
+    .stTextInput input:focus, .stTextArea textarea:focus {
+        border-color: #00d2ff !important;
+        box-shadow: 0 0 0 2px rgba(0, 210, 255, 0.15) !important;
+    }
+
+    /* Select boxes */
+    .stSelectbox div[data-baseweb="select"] {
+        background: #16162a !important;
+        border: 1px solid #2a2a4a !important;
+        border-radius: 10px !important;
+    }
+
+    /* Sliders */
+    .stSlider div[data-baseweb="slider"] {
+        background: transparent;
+    }
+
+    /* Sidebar */
+    section[data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #0f0f1a 0%, #1a1a2e 100%);
+        border-right: 1px solid #2a2a4a;
+    }
+    section[data-testid="stSidebar"] .stMarkdown {
+        color: #e0e0e0;
+    }
+
+    /* Tabs */
+    .stTabs button {
+        border-radius: 10px 10px 0 0 !important;
+        font-weight: 500;
+    }
+    .stTabs button[aria-selected="true"] {
+        border-bottom: 2px solid #00d2ff !important;
+        color: #00d2ff !important;
+    }
+
+    /* Dividers & labels */
+    hr { border-color: #2a2a4a !important; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+    ::-webkit-scrollbar-track { background: #0f0f1a; }
+    ::-webkit-scrollbar-thumb {
+        background: #2a2a4a;
+        border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: #3a3a5a; }
+
+    /* Video player */
+    video {
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+
+    /* Checkbox */
+    .stCheckbox label { color: #e0e0e0 !important; }
+
+    /* Success / Error / Info messages */
+    .stAlert {
+        border-radius: 12px !important;
+        border: none !important;
+    }
 </style>
 """
 st.markdown(streamlit_style, unsafe_allow_html=True)
@@ -135,6 +251,7 @@ support_locales = [
     "vi-VN",
     "th-TH",
     "tr-TR",
+    "id-ID",
 ]
 
 
@@ -577,10 +694,10 @@ if not config.app.get("hide_config", False):
 
             st_llm_api_key = st.text_input(
                 tr("API Key"), value=llm_api_key, type="password",
-                placeholder="e.g. sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                placeholder=tr("API Key Placeholder")
             )
             st_llm_base_url = st.text_input(tr("Base Url"), value=llm_base_url,
-                placeholder="e.g. https://api.openai.com/v1  (leave blank for default)")
+                placeholder=tr("Base Url Placeholder"))
             st_llm_model_name = ""
             if llm_provider != "ernie":
                 if llm_provider == "groq":
@@ -606,7 +723,7 @@ if not config.app.get("hide_config", False):
                         st_llm_model_name = st.text_input(
                             tr("Model Name"),
                             value=llm_model_name,
-                            placeholder="e.g. llama-3.3-70b-versatile",
+                            placeholder=tr("Groq Model Name Placeholder"),
                             key="groq_model_name_input",
                         )
                         if effective_api_key:
@@ -621,7 +738,7 @@ if not config.app.get("hide_config", False):
                     st_llm_model_name = st.text_input(
                         tr("Model Name"),
                         value=llm_model_name,
-                        placeholder="e.g. gpt-4o, gpt-3.5-turbo, deepseek-chat",
+                        placeholder=tr("Model Name Placeholder"),
                         key=f"{llm_provider}_model_name_input",
                     )
                 if st_llm_model_name:
@@ -638,14 +755,14 @@ if not config.app.get("hide_config", False):
             if llm_provider == "ernie":
                 st_llm_secret_key = st.text_input(
                     tr("Secret Key"), value=llm_secret_key, type="password",
-                    placeholder="e.g. your-ernie-secret-key"
+                    placeholder=tr("Secret Key Placeholder")
                 )
                 config.app[f"{llm_provider}_secret_key"] = st_llm_secret_key
 
             if llm_provider == "cloudflare":
                 st_llm_account_id = st.text_input(
                     tr("Account ID"), value=llm_account_id,
-                    placeholder="e.g. your-cloudflare-account-id"
+                    placeholder=tr("Account ID Placeholder")
                 )
                 if st_llm_account_id:
                     config.app[f"{llm_provider}_account_id"] = st_llm_account_id
@@ -670,14 +787,14 @@ if not config.app.get("hide_config", False):
             pexels_api_key = get_keys_from_config("pexels_api_keys")
             pexels_api_key = st.text_input(
                 tr("Pexels API Key"), value=pexels_api_key, type="password",
-                placeholder="e.g. abc123def456...  (get from https://www.pexels.com/api/)"
+                placeholder=tr("Pexels API Key Placeholder")
             )
             save_keys_to_config("pexels_api_keys", pexels_api_key)
 
             pixabay_api_key = get_keys_from_config("pixabay_api_keys")
             pixabay_api_key = st.text_input(
                 tr("Pixabay API Key"), value=pixabay_api_key, type="password",
-                placeholder="e.g. 12345678-abc123def456...  (get from https://pixabay.com/api/docs/)"
+                placeholder=tr("Pixabay API Key Placeholder")
             )
             save_keys_to_config("pixabay_api_keys", pixabay_api_key)
 
@@ -697,7 +814,7 @@ with left_panel:
         params.video_subject = st.text_input(
             tr("Video Subject"),
             key="video_subject",
-            placeholder="e.g. Top 10 AI Tools 2026, How to bake a chocolate cake, Crypto News Today",
+            placeholder=tr("Video Subject Placeholder"),
         ).strip()
 
         video_languages = [
@@ -772,7 +889,7 @@ with left_panel:
                     st.session_state["video_terms"] = ", ".join(terms)
         params.video_script = st.text_area(
             tr("Video Script"), value=st.session_state["video_script"], height=280,
-            placeholder="AI will auto-generate the script based on your subject. Or you can write your own script here.\n\n💡 Example:\nArtificial Intelligence is changing the world faster than ever before. From ChatGPT to Midjourney, AI tools are revolutionizing how we work and create. In this video, we'll explore the top 10 AI tools you need to know in 2026..."
+            placeholder=tr("Video Script Placeholder")
         )
         if st.button(tr("Generate Video Keywords"), key="auto_generate_terms"):
             if not params.video_script:

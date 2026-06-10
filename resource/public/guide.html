@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoneyPrinterTurbo - Complete Guide</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #0f0f1a;
+            color: #e0e0e0;
+            line-height: 1.8;
+        }
+        .header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 50px 20px 40px;
+            text-align: center;
+            border-bottom: 1px solid #2a2a4a;
+        }
+        .header h1 {
+            font-size: 2.2em;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        .header p { color: #aaa; font-size: 1.1em; max-width: 700px; margin: 0 auto; }
+
+        .container { max-width: 960px; margin: 0 auto; padding: 0 20px; }
+
+        .toc {
+            background: #1a1a2e;
+            border: 1px solid #2a2a4a;
+            border-radius: 12px;
+            padding: 25px 30px;
+            margin: 30px 0;
+        }
+        .toc h2 { color: #00d2ff; font-size: 1.2em; margin-bottom: 15px; }
+        .toc ol { padding-left: 20px; }
+        .toc li { margin-bottom: 6px; font-size: 0.95em; }
+        .toc a { color: #4ade80; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; color: #00d2ff; }
+
+        .lang-tabs {
+            display: flex; gap: 10px; justify-content: center;
+            margin: 25px 0 5px;
+        }
+        .lang-tab {
+            padding: 10px 35px; border: 1px solid #2a2a4a; border-radius: 8px;
+            cursor: pointer; background: #1a1a2e; color: #999; font-size: 0.95em;
+            transition: all 0.3s;
+        }
+        .lang-tab.active { background: #00d2ff; color: #0f0f1a; border-color: #00d2ff; font-weight: 700; }
+        .lang-tab:hover:not(.active) { border-color: #00d2ff; color: #e0e0e0; }
+
+        .lang-content { display: none; }
+        .lang-content.active { display: block; }
+
+        .section {
+            background: #1a1a2e;
+            border: 1px solid #2a2a4a;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        .section h2 {
+            font-size: 1.4em; color: #00d2ff; margin-bottom: 20px;
+            display: flex; align-items: center; gap: 10px;
+            border-bottom: 1px solid #2a2a4a;
+            padding-bottom: 12px;
+        }
+        .section h3 {
+            font-size: 1.1em; color: #fff; margin: 25px 0 12px;
+        }
+        .section h4 {
+            color: #4ade80; font-size: 1em; margin: 18px 0 8px;
+        }
+        .section p { color: #ccc; margin-bottom: 12px; font-size: 0.95em; }
+        .section ul, .section ol { padding-left: 22px; margin: 10px 0 15px; }
+        .section li { color: #ccc; margin-bottom: 8px; font-size: 0.95em; }
+        .section code {
+            background: #0f0f1a; padding: 2px 8px; border-radius: 4px;
+            color: #00d2ff; font-size: 0.9em;
+        }
+        .section strong { color: #fff; }
+        .section em { color: #4ade80; }
+
+        .tip-box {
+            background: #0f3460; border-left: 4px solid #00d2ff;
+            padding: 15px 20px; border-radius: 0 8px 8px 0; margin: 15px 0;
+        }
+        .tip-box strong { color: #00d2ff; }
+
+        .warn-box {
+            background: #3a2a1a; border-left: 4px solid #facc15;
+            padding: 15px 20px; border-radius: 0 8px 8px 0; margin: 15px 0;
+        }
+        .warn-box strong { color: #facc15; }
+
+        .step-box {
+            background: #16162a; border-left: 4px solid #4ade80;
+            padding: 18px 22px; border-radius: 0 8px 8px 0; margin: 15px 0;
+        }
+        .step-box strong { color: #4ade80; }
+
+        table {
+            width: 100%; border-collapse: collapse; margin: 15px 0; font-size: 0.9em;
+        }
+        th, td {
+            border: 1px solid #2a2a4a; padding: 10px 14px; text-align: left;
+        }
+        th { background: #16162a; color: #4ade80; font-weight: 600; }
+        td { color: #ccc; }
+        .tag {
+            display: inline-block; padding: 2px 10px; border-radius: 4px;
+            font-size: 0.8em; font-weight: 600;
+        }
+        .tag-green { background: #1a3a2a; color: #4ade80; }
+        .tag-yellow { background: #3a3a1a; color: #facc15; }
+        .tag-red { background: #3a1a1a; color: #f87171; }
+        .tag-blue { background: #1a2a3a; color: #60a5fa; }
+
+        hr { border: none; border-top: 1px solid #2a2a4a; margin: 30px 0; }
+
+        .footer {
+            text-align: center; padding: 30px; border-top: 1px solid #2a2a4a;
+            color: #666; font-size: 0.85em; margin-top: 40px;
+        }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.5em; }
+            .lang-tabs { flex-direction: column; align-items: center; }
+            table { font-size: 0.8em; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>📖 MoneyPrinterTurbo — Complete Guide</h1>
+    <p>Step-by-step tutorial for beginners. Simple language, practical examples, and everything you need to create AI videos.</p>
+</div>
+
+<div class="container">
+    <div class="lang-tabs">
+        <div class="lang-tab active" onclick="switchLang('en')">🇬🇧 English</div>
+        <div class="lang-tab" onclick="switchLang('id')">🇮🇩 Bahasa Indonesia</div>
+    </div>
+
+<!-- ============================================================ ENGLISH ============================================================ -->
+<div class="lang-content active" id="lang-en">
+
+<!-- TABLE OF CONTENTS -->
+<div class="toc">
+    <h2>📋 Table of Contents</h2>
+    <ol>
+        <li><a href="#en-intro">What is MoneyPrinterTurbo?</a></li>
+        <li><a href="#en-how">How it Works — The Big Picture</a></li>
+        <li><a href="#en-quick">Quick Start: First Video in 5 Minutes</a></li>
+        <li><a href="#en-apikey">Getting API Keys (Step by Step)</a></li>
+        <li><a href="#en-llm">LLM Settings — Choosing Your AI Brain</a></li>
+        <li><a href="#en-script">Video Script Settings — Writing with AI</a></li>
+        <li><a href="#en-video">Video Settings — Customizing the Visuals</a></li>
+        <li><a href="#en-audio">Audio Settings — Voice & Music</a></li>
+        <li><a href="#en-subtitle">Subtitle Settings — Adding Text</a></li>
+        <li><a href="#en-generate">Generating and Downloading Videos</a></li>
+        <li><a href="#en-tips">Pro Tips & Best Practices</a></li>
+        <li><a href="#en-trouble">Troubleshooting — Common Problems</a></li>
+        <li><a href="#en-faq">Frequently Asked Questions</a></li>
+    </ol>
+</div>
+
+<!-- 1. WHAT IS -->
+<div class="section" id="en-intro">
+    <h2>1. 🤖 What is MoneyPrinterTurbo?</h2>
+    <p>MoneyPrinterTurbo is an <strong>AI-powered tool</strong> that automatically creates short videos. You just type a topic — like "Top 10 AI Tools 2026" — and the AI does everything:</p>
+    <ul>
+        <li>🧠 <strong>Writes the script</strong> using AI (like ChatGPT or DeepSeek)</li>
+        <li>🎥 <strong>Finds video clips</strong> from Pexels or Pixabay matching your topic</li>
+        <li>🗣️ <strong>Creates voiceover</strong> using Text-to-Speech (TTS) technology</li>
+        <li>📝 <strong>Adds subtitles</strong> with customizable fonts and colors</li>
+        <li>🎵 <strong>Adds background music</strong> automatically</li>
+        <li>⚡ <strong>Renders</strong> a complete HD video ready to upload</li>
+    </ul>
+    <div class="tip-box">
+        <strong>💡 Who is this for?</strong><br>
+        TikTok & Reels creators, digital marketers, educators, news channels, affiliate marketers — anyone who needs high-quality short videos fast.
+    </div>
+</div>
+
+<!-- 2. HOW IT WORKS -->
+<div class="section" id="en-how">
+    <h2>2. 🔄 How it Works — The Big Picture</h2>
+    <p>The video creation process follows 4 simple stages:</p>
+    <div class="step-box">
+        <strong>Stage 1: Script Generation</strong><br>
+        You enter a topic. AI (via LLM provider like DeepSeek or OpenAI) writes a script and suggests search keywords.
+    </div>
+    <div class="step-box">
+        <strong>Stage 2: Material Collection</strong><br>
+        The app searches Pexels or Pixabay for video clips related to your keywords. You can also upload your own videos.
+    </div>
+    <div class="step-box">
+        <strong>Stage 3: Assembly</strong><br>
+        The app combines clips, adds voiceover (TTS), subtitles, and background music. You control duration, transitions, styles.
+    </div>
+    <div class="step-box">
+        <strong>Stage 4: Rendering</strong><br>
+        A high-definition MP4 video is created. Watch it in the browser or download it.
+    </div>
+    <div class="warn-box">
+        <strong>⚠️ Important:</strong> This app needs internet connection to call AI APIs. Only Ollama + Local files work offline.
+    </div>
+</div>
+
+<!-- 3. QUICK START -->
+<div class="section" id="en-quick">
+    <h2>3. ⚡ Quick Start: First Video in 5 Minutes</h2>
+    <p>Follow these 4 simple steps to create your first video:</p>
+
+    <h3>Step 1: Enter a Topic</h3>
+    <p>In the left panel, type a video subject. Examples:</p>
+    <ul>
+        <li>"Top 10 AI Tools 2026"</li>
+        <li>"How to make a chocolate cake"</li>
+        <li>"Crypto news today"</li>
+        <li>"5 tips for better sleep"</li>
+    </ul>
+
+    <h3>Step 2: Generate Script</h3>
+    <p>Click the button <strong>"Generate Video Script and Keywords"</strong>. The AI will write a full script and suggest keywords for finding video clips. Wait a few seconds.</p>
+
+    <h3>Step 3: Adjust Settings (Optional)</h3>
+    <p>You can skip this step if you want — the default settings work fine. But if you want to customize:</p>
+    <ul>
+        <li><strong>Right panel:</strong> Choose subtitle font, color, position</li>
+        <li><strong>Middle panel:</strong> Pick video ratio (9:16 for TikTok, 16:9 for YouTube)</li>
+        <li><strong>Middle panel:</strong> Choose a voice for narration</li>
+    </ul>
+
+    <h3>Step 4: Generate!</h3>
+    <p>Click the big <strong>"Generate Video"</strong> button at the bottom. Wait 1-3 minutes while the AI finds clips, adds voice, and renders your video. When done, you'll see the video player appear!</p>
+
+    <div class="tip-box">
+        <strong>💡 Tip:</strong> Make sure you have entered at least one LLM API key and one Video Source API key in <strong>Basic Settings</strong> (click the expandable panel at the top).
+    </div>
+</div>
+
+<!-- 4. GETTING API KEYS -->
+<div class="section" id="en-apikey">
+    <h2>4. 🔑 Getting API Keys (Step by Step)</h2>
+    <p>To use MoneyPrinterTurbo, you need at least <strong>two API keys</strong>: one for AI script writing (LLM), and one for video material (Pexels or Pixabay). Here's how to get them free:</p>
+
+    <h3>Option A: DeepSeek (Best for Indonesia — No VPN) ✅</h3>
+    <ol>
+        <li>Go to <a href="https://platform.deepseek.com" style="color:#00d2ff" target="_blank">platform.deepseek.com</a></li>
+        <li>Click "Sign Up" and create an account (email + password)</li>
+        <li>Go to "API Keys" page</li>
+        <li>Click "Create API Key" — copy the key (starts with <code>sk-</code>)</li>
+        <li>Paste it in Basic Settings → LLM Settings → API Key</li>
+        <li>Set Base URL to <code>https://api.deepseek.com</code></li>
+        <li>Set Model Name to <code>deepseek-chat</code></li>
+    </ol>
+    <div class="tip-box">
+        <strong>💰 Cost:</strong> DeepSeek gives free credits when you sign up. Very cheap after that (~$0.14 per 1M tokens).
+    </div>
+
+    <h3>Option B: OpenAI (Needs VPN)</h3>
+    <ol>
+        <li>Go to <a href="https://platform.openai.com/api-keys" style="color:#00d2ff" target="_blank">platform.openai.com</a></li>
+        <li>Sign up, add payment method</li>
+        <li>Create an API key</li>
+        <li>Set Model Name to <code>gpt-4o</code> or <code>gpt-3.5-turbo</code></li>
+    </ol>
+
+    <h3>Option C: Groq (100% Free)</h3>
+    <ol>
+        <li>Go to <a href="https://console.groq.com/keys" style="color:#00d2ff" target="_blank">console.groq.com/keys</a></li>
+        <li>Sign up with Google or GitHub</li>
+        <li>Create an API key</li>
+        <li>Set Model Name to <code>llama-3.3-70b-versatile</code></li>
+        <li>Set Base URL to <code>https://api.groq.com/openai/v1</code></li>
+    </ol>
+    <div class="tip-box">
+        <strong>💰 Cost:</strong> Free! But limited requests per minute.
+    </div>
+
+    <h3>Getting a Pexels API Key (Free Video Source)</h3>
+    <ol>
+        <li>Go to <a href="https://www.pexels.com/api/" style="color:#00d2ff" target="_blank">pexels.com/api</a></li>
+        <li>Click "Join Pexels" or sign up with Google/Facebook</li>
+        <li>Go to "Your API Key" page</li>
+        <li>Copy the key (a string of letters and numbers)</li>
+        <li>Paste it in Basic Settings → Video Source Settings → Pexels API Key</li>
+    </ol>
+    <div class="tip-box">
+        <strong>💰 Cost:</strong> Free! 200 requests per hour. More than enough for personal use.
+    </div>
+
+    <h3>Getting a Pixabay API Key (Alternative Free Video Source)</h3>
+    <ol>
+        <li>Go to <a href="https://pixabay.com/api/docs/" style="color:#00d2ff" target="_blank">pixabay.com/api/docs</a></li>
+        <li>Sign up for a Pixabay account</li>
+        <li>Go to "API Key" section</li>
+        <li>Copy the key</li>
+        <li>Paste it in Basic Settings → Pixabay API Key</li>
+    </ol>
+
+    <table>
+        <tr><th>What you need</th><th>Minimum Setup</th><th>Cost</th><th>Difficulty</th></tr>
+        <tr><td>LLM (AI writing)</td><td>DeepSeek</td><td><span class="tag tag-green">Free credit</span></td><td><span class="tag tag-green">Easy</span></td></tr>
+        <tr><td>Video Source</td><td>Pexels</td><td><span class="tag tag-green">Free</span></td><td><span class="tag tag-green">Easy</span></td></tr>
+        <tr><td>TTS (Voice)</td><td>Azure TTS V1</td><td><span class="tag tag-green">Free, no setup</span></td><td><span class="tag tag-green">None needed</span></td></tr>
+    </table>
+</div>
+
+<!-- 5. LLM SETTINGS -->
+<div class="section" id="en-llm">
+    <h2>5. 🧠 LLM Settings — Choosing Your AI Brain</h2>
+    <p>The LLM (Large Language Model) is the "brain" that writes your video scripts. Click <strong>Basic Settings</strong> at the top to see LLM options.</p>
+
+    <h3>Which provider should I choose?</h3>
+    <table>
+        <tr><th>Provider</th><th>API Key Required?</th><th>VPN Needed?</th><th>Cost</th><th>Best For</th></tr>
+        <tr><td>DeepSeek</td><td>✅ Yes</td><td>❌ No</td><td>💰 Free credit + cheap</td><td>🇮🇩 Indonesia users (no VPN)</td></tr>
+        <tr><td>OpenAI</td><td>✅ Yes</td><td>✅ Yes</td><td>💵 Paid</td><td>Best quality, needs VPN</td></tr>
+        <tr><td>Groq</td><td>✅ Yes</td><td>❌ No</td><td>🎁 Free</td><td>Free & fast, limited requests</td></tr>
+        <tr><td>Gemini</td><td>✅ Yes</td><td>❌ No*</td><td>🎁 Free tier</td><td>Free from Google</td></tr>
+        <tr><td>Ollama</td><td>❌ No</td><td>❌ No</td><td>🏠 100% Free</td><td>Run on your own PC (no internet)</td></tr>
+        <tr><td>Moonshot</td><td>✅ Yes</td><td>❌ No</td><td>💰 Free credit</td><td>China-based, no VPN</td></tr>
+        <tr><td>AIHubMix</td><td>✅ Yes</td><td>❌ No</td><td>💵 Paid</td><td>Access to 700+ models in one place</td></tr>
+    </table>
+
+    <h3>What to fill in the form:</h3>
+    <ul>
+        <li><strong>LLM Provider:</strong> Select from the dropdown (e.g. DeepSeek)</li>
+        <li><strong>API Key:</strong> Paste your key here (starts with <code>sk-</code> usually)</li>
+        <li><strong>Base URL:</strong> The API address (most providers already have default values)</li>
+        <li><strong>Model Name:</strong> Which AI model to use (e.g. <code>deepseek-chat</code>, <code>gpt-4o</code>)</li>
+    </ul>
+
+    <div class="warn-box">
+        <strong>⚠️ Important:</strong> Each provider has its own format! If you choose OpenAI, don't paste a DeepSeek key there. Make sure you select the right provider first.
+    </div>
+</div>
+
+<!-- 6. SCRIPT SETTINGS -->
+<div class="section" id="en-script">
+    <h2>6. 📝 Video Script Settings — Writing with AI</h2>
+    <p>This is the left panel. Here you control how the AI writes your video script.</p>
+
+    <h3>Video Subject</h3>
+    <p>Type what your video is about. Be specific for best results:</p>
+    <ul>
+        <li>❌ Bad: "AI"</li>
+        <li>✅ Good: "Top 10 AI Tools That Will Change Your Life in 2026"</li>
+        <li>✅ Good: "How to Make a Perfect Chocolate Cake in 5 Minutes"</li>
+    </ul>
+
+    <h3>Script Language</h3>
+    <p>Choose the language for the AI to write in. "Auto Detect" lets the AI decide based on your topic. Or choose a specific language like English, Indonesian, Chinese, etc.</p>
+
+    <h3>Advanced Script Settings</h3>
+    <p>Click to expand. Here you can:</p>
+    <ul>
+        <li><strong>Script Paragraph Number:</strong> How many paragraphs (1-3). For short videos (30-60 seconds), 1 paragraph is enough.</li>
+        <li><strong>Custom Script Requirements:</strong> Special instructions for the AI. Examples:
+            <ul>
+                <li>"Use a funny and casual tone"</li>
+                <li>"Make it suitable for TikTok, keep it fast-paced"</li>
+                <li>"Target young audiences aged 18-25"</li>
+            </ul>
+        </li>
+        <li><strong>Use Custom System Prompt:</strong> For advanced users. Replaces the default AI instructions entirely.</li>
+    </ul>
+
+    <h3>Generate Script & Keywords</h3>
+    <p>Click this button to let AI write the script AND suggest keywords for finding video clips.</p>
+
+    <h3>Video Script Text Area</h3>
+    <p>The AI-generated script appears here. You can edit it manually if you want to change something.</p>
+
+    <h3>Video Keywords</h3>
+    <p>These are words the app uses to search for video clips on Pexels/Pixabay. AI generates them, but you can edit them. Use <strong>English commas</strong> to separate: <code>AI technology, robot, future</code>.</p>
+</div>
+
+<!-- 7. VIDEO SETTINGS -->
+<div class="section" id="en-video">
+    <h2>7. 🎬 Video Settings — Customizing the Visuals</h2>
+    <p>The middle panel controls how your video looks.</p>
+
+    <h3>Video Source</h3>
+    <ul>
+        <li><strong>Pexels</strong> (recommended): Free HD stock videos. Need API key.</li>
+        <li><strong>Pixabay:</strong> Alternative free stock videos. Need API key.</li>
+        <li><strong>Local file:</strong> Upload your own videos or images from your computer.</li>
+        <li><strong>TikTok / Bilibili / Xiaohongshu:</strong> Not yet available.</li>
+    </ul>
+
+    <h3>Video Concat Mode</h3>
+    <ul>
+        <li><strong>Random:</strong> Video clips are shown in random order. More varied.</li>
+        <li><strong>Sequential:</strong> Clips follow the same order they were found.</li>
+    </ul>
+
+    <h3>Video Transition Mode</h3>
+    <p>How one clip changes to the next:</p>
+    <ul>
+        <li><strong>None:</strong> Direct cut (no effect)</li>
+        <li><strong>Shuffle:</strong> Random transition effect</li>
+        <li><strong>FadeIn / FadeOut:</strong> Fade to black and back</li>
+        <li><strong>SlideIn / SlideOut:</strong> Slide new clip in</li>
+    </ul>
+
+    <h3>Video Ratio</h3>
+    <ul>
+        <li><strong>Portrait 9:16</strong> — For TikTok, Instagram Reels, YouTube Shorts</li>
+        <li><strong>Landscape 16:9</strong> — For YouTube videos, presentations</li>
+    </ul>
+
+    <h3>Clip Duration</h3>
+    <p>How long each video clip plays. 3-5 seconds is recommended for fast-paced short videos.</p>
+
+    <h3>Number of Videos</h3>
+    <p>Generate 1 to 5 videos at the same time. Each video will have slightly different clips and music.</p>
+
+    <h3>Advanced Video Settings</h3>
+    <p><strong>Video Encoder:</strong> Choose between:</p>
+    <ul>
+        <li><code>libx264 (CPU)</code> — Works everywhere, slower but safe</li>
+        <li><code>h264_nvenc (NVIDIA)</code> — Much faster if you have an NVIDIA GPU</li>
+        <li><code>h264_amf (AMD)</code> — Faster with AMD graphics card</li>
+        <li><code>h264_qsv (Intel)</code> — Faster with Intel integrated graphics</li>
+    </ul>
+    <div class="tip-box">
+        <strong>💡 Tip:</strong> If you're not sure, leave it as <strong>libx264</strong>. It works on all systems.
+    </div>
+</div>
+
+<!-- 8. AUDIO SETTINGS -->
+<div class="section" id="en-audio">
+    <h2>8. 🔊 Audio Settings — Voice & Music</h2>
+    <p>Still in the middle panel, below Video Settings.</p>
+
+    <h3>TTS Servers (Text-to-Speech)</h3>
+    <p>This is what reads your script aloud. Options:</p>
+    <ul>
+        <li><strong>Azure TTS V1 (Default)</strong> — ✅ Free, no setup needed. Good quality.</li>
+        <li><strong>Azure TTS V2</strong> — Better quality, but needs Azure API key + region.</li>
+        <li><strong>SiliconFlow TTS</strong> — Alternative TTS, needs API key from SiliconFlow.</li>
+        <li><strong>Google Gemini TTS</strong> — Uses your Gemini API key. Good quality.</li>
+        <li><strong>Xiaomi MiMo TTS</strong> — From Xiaomi, needs MiMo API key.</li>
+        <li><strong>No Voice</strong> — Skip voiceover (video will be silent or use only BGM).</li>
+    </ul>
+
+    <h3>Speech Synthesis Voice</h3>
+    <p>Choose a voice. Available voices depend on your TTS server. For Azure TTS V1, you can choose from many languages and genders.</p>
+
+    <h3>Speech Volume & Rate</h3>
+    <ul>
+        <li><strong>Volume:</strong> 1.0 is normal. Lower for background narration.</li>
+        <li><strong>Rate:</strong> 1.0 is normal speed. 1.2 is slightly faster.</li>
+    </ul>
+
+    <h3>Custom Audio File</h3>
+    <p>Upload your own audio (MP3, WAV, etc.). If you upload, the TTS voice will be skipped and your audio will be used directly.</p>
+
+    <h3>Background Music</h3>
+    <ul>
+        <li><strong>No Background Music:</strong> Only voiceover, no BGM.</li>
+        <li><strong>Random Background Music:</strong> The app picks a random song from built-in tracks.</li>
+        <li><strong>Custom Background Music:</strong> Type the filename (place your MP3 in the <code>resource/songs</code> folder).</li>
+    </ul>
+    <div class="tip-box">
+        <strong>🎵 Music tip:</strong> Keep background music volume at <strong>0.2-0.3</strong> so the voiceover stays clear and easy to hear.
+    </div>
+</div>
+
+<!-- 9. SUBTITLE SETTINGS -->
+<div class="section" id="en-subtitle">
+    <h2>9. 📝 Subtitle Settings — Adding Text</h2>
+    <p>The right panel controls subtitles (the text that appears on screen).</p>
+
+    <h3>Enable Subtitles</h3>
+    <p>Turn subtitles on or off. If off, the rest of the settings below don't matter.</p>
+
+    <h3>Subtitle Font</h3>
+    <p>Choose from available fonts. The app comes with several fonts built-in.</p>
+
+    <h3>Subtitle Position</h3>
+    <ul>
+        <li><strong>Bottom:</strong> Most common — subtitles at the bottom of the screen.</li>
+        <li><strong>Center:</strong> In the middle (great for highlighting key words).</li>
+        <li><strong>Top:</strong> At the top.</li>
+        <li><strong>Custom:</strong> Choose a percentage from the top (e.g. 70% = near bottom).</li>
+    </ul>
+
+    <h3>Font Size & Colors</h3>
+    <ul>
+        <li><strong>Font Size:</strong> 30 (small) to 100 (large). 60 is a good default.</li>
+        <li><strong>Font Color:</strong> Pick any color. White (#FFFFFF) is safest.</li>
+        <li><strong>Stroke Color & Width:</strong> Adds a border around text for readability.</li>
+    </ul>
+
+    <h3>Subtitle Background</h3>
+    <p>Enable a background behind the text so it's readable even on light-colored video.</p>
+    <ul>
+        <li><strong>Background Color:</strong> Usually black (#000000) with transparency.</li>
+        <li><strong>Rounded Background:</strong> Makes the background pill-shaped instead of rectangular.</li>
+    </ul>
+</div>
+
+<!-- 10. GENERATING -->
+<div class="section" id="en-generate">
+    <h2>10. 🚀 Generating and Downloading Videos</h2>
+
+    <h3>Before You Click Generate</h3>
+    <p>Checklist:</p>
+    <ul>
+        <li>✅ LLM API key is filled (Basic Settings)</li>
+        <li>✅ Video Source API key is filled (Pexels or Pixabay)</li>
+        <li>✅ Video subject or script is entered</li>
+        <li>✅ Internet connection is working</li>
+    </ul>
+
+    <h3>Click "Generate Video"</h3>
+    <p>The big button at the bottom. The process takes 1-5 minutes depending on video length and internet speed.</p>
+
+    <h3>What happens during generation:</h3>
+    <ol>
+        <li>The app calls the LLM to write a script (if not already provided)</li>
+        <li>The app searches Pexels/Pixabay for video clips</li>
+        <li>The app generates voiceover audio using TTS</li>
+        <li>The app combines everything — clips, audio, subtitles, music</li>
+        <li>The app renders the final MP4 video file</li>
+    </ol>
+
+    <h3>After generation</h3>
+    <p>You'll see a video player appear. You can watch the video directly in the browser. The video is also saved to the <code>storage/tasks/</code> folder on your server.</p>
+</div>
+
+<!-- 11. PRO TIPS -->
+<div class="section" id="en-tips">
+    <h2>11. 💡 Pro Tips & Best Practices</h2>
+
+    <h3>Writing Good Topics</h3>
+    <ul>
+        <li>Be specific: "How to make a chocolate cake" is better than "Cake"</li>
+        <li>Include numbers: "Top 5 AI Tools" is more clickable than "AI Tools"</li>
+        <li>Add a target: "For beginners" or "In 2026" helps AI focus</li>
+    </ul>
+
+    <h3>Getting Better Voiceover</h3>
+    <ul>
+        <li>Keep script between 50-100 words for a 30-second video</li>
+        <li>Use simple sentences — AI reads them more naturally</li>
+        <li>Add punctuation (periods, commas) — it helps TTS sound natural</li>
+        <li>Test different voices — some sound more natural than others</li>
+    </ul>
+
+    <h3>Video Quality Tips</h3>
+    <ul>
+        <li>Use <strong>Pexels</strong> as video source — it has the best quality clips</li>
+        <li>Set clip duration to 4 seconds — not too short, not too long</li>
+        <li>Use <strong>Random transition</strong> for a professional look</li>
+        <li>Keep background music at 20-30% volume</li>
+        <li>Enable subtitles — many viewers watch without sound</li>
+    </ul>
+
+    <h3>Batch Generation Strategy</h3>
+    <p>Set "Number of Videos" to 3-5 to create multiple versions. Each will have different clips and music. Post them across different platforms to see which performs best.</p>
+
+    <h3>Saving Time</h3>
+    <ul>
+        <li>Save your API keys — the app remembers them</li>
+        <li>Reuse scripts — edit slightly for new videos</li>
+        <li>Use the same settings — once you find what works, stick with it</li>
+    </ul>
+</div>
+
+<!-- 12. TROUBLESHOOTING -->
+<div class="section" id="en-trouble">
+    <h2>12. 🔧 Troubleshooting — Common Problems</h2>
+
+    <h3>"Please Enter the LLM API Key"</h3>
+    <p>Go to Basic Settings, make sure you've selected an LLM Provider and entered a valid API key.</p>
+
+    <h3>"Please Enter the Pexels API Key"</h3>
+    <p>Go to Basic Settings → Video Source Settings, enter your Pexels API key. Get one free at pexels.com/api.</p>
+
+    <h3>Video generation fails / stuck</h3>
+    <ul>
+        <li>Check your internet connection</li>
+        <li>Make sure your API keys are correct</li>
+        <li>Try a shorter video topic with fewer keywords</li>
+        <li>Reduce "Number of Videos" to 1</li>
+        <li>Check the log panel — it shows what's happening behind the scenes</li>
+    </ul>
+
+    <h3>Subtitles not appearing</h3>
+    <p>Make sure "Enable Subtitles" is checked in the right panel.</p>
+
+    <h3>No voice / audio</h3>
+    <ul>
+        <li>Check TTS server is selected (not "No Voice")</li>
+        <li>Make sure you chose a voice in "Speech Synthesis"</li>
+        <li>Check speech volume is not set to 0</li>
+    </ul>
+
+    <h3>Video clips not found</h3>
+    <ul>
+        <li>Your keywords might be too specific. Try broader terms.</li>
+        <li>Check that your Pexels/Pixabay API key is valid.</li>
+        <li>Switch to a different video source.</li>
+    </ul>
+
+    <h3>"Error from LLM" message</h3>
+    <ul>
+        <li>Your API key might be invalid or expired</li>
+        <li>You might have run out of credits</li>
+        <li>The provider's server might be down — try another provider</li>
+    </ul>
+</div>
+
+<!-- 13. FAQ -->
+<div class="section" id="en-faq">
+    <h2>13. ❓ Frequently Asked Questions</h2>
+
+    <h3>Is this tool free?</h3>
+    <p>The software itself is 100% free and open source. But you need API keys for AI services. DeepSeek gives free credits, Pexels is free, and Azure TTS V1 is free. So you can use it for free!</p>
+
+    <h3>What kind of videos can I make?</h3>
+    <p>Short videos (30-90 seconds) for TikTok, Instagram Reels, YouTube Shorts, educational content, news summaries, product reviews, tips & tricks, and more.</p>
+
+    <h3>Do I need to know programming?</h3>
+    <p>No! The app has a user-friendly web interface. Just fill in the fields and click buttons.</p>
+
+    <h3>Can I use my own video clips?</h3>
+    <p>Yes. Select "Local file" as Video Source and upload your MP4, MOV, or image files.</p>
+
+    <h3>Can I use my own music?</h3>
+    <p>Yes. Place your MP3 files in the <code>resource/songs</code> folder, then type the filename in "Custom Background Music File".</p>
+
+    <h3>How many videos can I make per day?</h3>
+    <p>Unlimited! There's no limit in the software. But free API services have rate limits (e.g. Pexels allows 200 requests/hour).</p>
+
+    <h3>Can I edit the video after it's created?</h3>
+    <p>This app creates the final video file. You can download the MP4 and edit it further in any video editing software.</p>
+
+    <h3>Is my data private?</h3>
+    <p>Yes. Everything runs on your own server/Docker. Your API keys stay on your computer. Nothing is sent to third parties except the API calls to LLM and Pexels/Pixabay.</p>
+</div>
+
+</div> <!-- end English -->
+
+
+<!-- ============================================================ INDONESIA ============================================================ -->
+<div class="lang-content" id="lang-id">
+
+<div class="toc">
+    <h2>📋 Daftar Isi</h2>
+    <ol>
+        <li><a href="#id-intro">Apa itu MoneyPrinterTurbo?</a></li>
+        <li><a href="#id-how">Cara Kerja — Gambaran Besar</a></li>
+        <li><a href="#id-quick">Mulai Cepat: Video Pertama dalam 5 Menit</a></li>
+        <li><a href="#id-apikey">Mendapatkan API Key (Langkah demi Langkah)</a></li>
+        <li><a href="#id-llm">Pengaturan LLM — Memilih Otak AI</a></li>
+        <li><a href="#id-script">Pengaturan Naskah Video — Menulis dengan AI</a></li>
+        <li><a href="#id-video">Pengaturan Video — Kustomisasi Tampilan</a></li>
+        <li><a href="#id-audio">Pengaturan Audio — Suara & Musik</a></li>
+        <li><a href="#id-subtitle">Pengaturan Subtitle — Menambahkan Teks</a></li>
+        <li><a href="#id-generate">Membuat dan Mendownload Video</a></li>
+        <li><a href="#id-tips">Tips Pro & Praktik Terbaik</a></li>
+        <li><a href="#id-trouble">Pemecahan Masalah — Masalah Umum</a></li>
+        <li><a href="#id-faq">Pertanyaan yang Sering Diajukan</a></li>
+    </ol>
+</div>
+
+<!-- 1 -->
+<div class="section" id="id-intro">
+    <h2>1. 🤖 Apa itu MoneyPrinterTurbo?</h2>
+    <p>MoneyPrinterTurbo adalah <strong>alat berbasis AI</strong> yang membuat video pendek secara otomatis. Anda cukup mengetik topik — misalnya "10 Alat AI Teratas 2026" — dan AI melakukan sisanya:</p>
+    <ul>
+        <li>🧠 <strong>Menulis naskah</strong> menggunakan AI (seperti ChatGPT atau DeepSeek)</li>
+        <li>🎥 <strong>Mencari klip video</strong> dari Pexels atau Pixabay yang sesuai dengan topik Anda</li>
+        <li>🗣️ <strong>Membuat suara narasi</strong> menggunakan teknologi Text-to-Speech (TTS)</li>
+        <li>📝 <strong>Menambahkan subtitle</strong> dengan font dan warna yang bisa diatur</li>
+        <li>🎵 <strong>Menambahkan musik latar</strong> secara otomatis</li>
+        <li>⚡ <strong>Merender</strong> video HD lengkap yang siap diunggah</li>
+    </ul>
+    <div class="tip-box">
+        <strong>💡 Untuk siapa alat ini?</strong><br>
+        Kreator TikTok & Reels, pemasar digital, pendidik, channel berita, affiliate marketer — siapa pun yang butuh video pendek berkualitas tinggi dengan cepat.
+    </div>
+</div>
+
+<!-- 2 -->
+<div class="section" id="id-how">
+    <h2>2. 🔄 Cara Kerja — Gambaran Besar</h2>
+    <p>Proses pembuatan video melalui 4 tahap sederhana:</p>
+    <div class="step-box">
+        <strong>Tahap 1: Pembuatan Naskah</strong><br>
+        Anda memasukkan topik. AI (via LLM seperti DeepSeek atau OpenAI) menulis naskah dan menyarankan kata kunci pencarian.
+    </div>
+    <div class="step-box">
+        <strong>Tahap 2: Pengumpulan Materi</strong><br>
+        Aplikasi mencari klip video dari Pexels atau Pixabay berdasarkan kata kunci Anda. Anda juga bisa mengunggah video sendiri.
+    </div>
+    <div class="step-box">
+        <strong>Tahap 3: Perakitan</strong><br>
+        Aplikasi menggabungkan klip, menambahkan suara (TTS), subtitle, dan musik latar. Anda bisa mengatur durasi, transisi, dan gaya.
+    </div>
+    <div class="step-box">
+        <strong>Tahap 4: Rendering</strong><br>
+        Video MP4高清 dibuat. Tonton di browser atau download.
+    </div>
+    <div class="warn-box">
+        <strong>⚠️ Penting:</strong> Aplikasi ini perlu koneksi internet untuk memanggil API AI. Hanya Ollama + File lokal yang bisa digunakan offline.
+    </div>
+</div>
+
+<!-- 3 -->
+<div class="section" id="id-quick">
+    <h2>3. ⚡ Mulai Cepat: Video Pertama dalam 5 Menit</h2>
+    <p>Ikuti 4 langkah sederhana ini untuk membuat video pertama Anda:</p>
+
+    <h3>Langkah 1: Masukkan Topik</h3>
+    <p>Di panel kiri, ketik subjek video. Contoh:</p>
+    <ul>
+        <li>"10 Alat AI Teratas 2026"</li>
+        <li>"Cara membuat kue coklat"</li>
+        <li>"Berita crypto hari ini"</li>
+        <li>"5 tips untuk tidur lebih nyenyak"</li>
+    </ul>
+
+    <h3>Langkah 2: Generate Naskah</h3>
+    <p>Klik tombol <strong>"Generate Video Script and Keywords"</strong>. AI akan menulis naskah lengkap dan menyarankan kata kunci untuk mencari klip video. Tunggu beberapa detik.</p>
+
+    <h3>Langkah 3: Atur Pengaturan (Opsional)</h3>
+    <p>Anda bisa lewati langkah ini — pengaturan standar sudah cukup baik. Tapi jika ingin mengatur:</p>
+    <ul>
+        <li><strong>Panel kanan:</strong> Pilih font, warna, posisi subtitle</li>
+        <li><strong>Panel tengah:</strong> Pilih rasio video (9:16 untuk TikTok, 16:9 untuk YouTube)</li>
+        <li><strong>Panel tengah:</strong> Pilih suara untuk narasi</li>
+    </ul>
+
+    <h3>Langkah 4: Generate!</h3>
+    <p>Klik tombol besar <strong>"Generate Video"</strong> di bagian bawah. Tunggu 1-3 menit sementara AI mencari klip, menambahkan suara, dan merender video Anda. Setelah selesai, pemutar video akan muncul!</p>
+
+    <div class="tip-box">
+        <strong>💡 Tip:</strong> Pastikan Anda sudah memasukkan minimal satu API key LLM dan satu API key Sumber Video di <strong>Basic Settings</strong> (klik panel yang bisa dibuka di bagian atas).
+    </div>
+</div>
+
+<!-- 4 -->
+<div class="section" id="id-apikey">
+    <h2>4. 🔑 Mendapatkan API Key (Langkah demi Langkah)</h2>
+    <p>Untuk menggunakan MoneyPrinterTurbo, Anda perlu minimal <strong>dua API key</strong>: satu untuk penulisan naskah AI (LLM), dan satu untuk materi video (Pexels atau Pixabay). Berikut cara mendapatkannya secara gratis:</p>
+
+    <h3>Opsi A: DeepSeek (Terbaik untuk Indonesia — Tanpa VPN) ✅</h3>
+    <ol>
+        <li>Buka <a href="https://platform.deepseek.com" style="color:#00d2ff" target="_blank">platform.deepseek.com</a></li>
+        <li>Klik "Sign Up" dan buat akun (email + password)</li>
+        <li>Masuk ke halaman "API Keys"</li>
+        <li>Klik "Create API Key" — salin key (diawali dengan <code>sk-</code>)</li>
+        <li>Tempel di Basic Settings → LLM Settings → API Key</li>
+        <li>Isi Base URL dengan <code>https://api.deepseek.com</code></li>
+        <li>Isi Model Name dengan <code>deepseek-chat</code></li>
+    </ol>
+    <div class="tip-box">
+        <strong>💰 Biaya:</strong> DeepSeek memberikan kredit gratis saat mendaftar. Sangat murah setelah itu (~$0.14 per 1M token).
+    </div>
+
+    <h3>Opsi B: OpenAI (Perlu VPN)</h3>
+    <ol>
+        <li>Buka <a href="https://platform.openai.com/api-keys" style="color:#00d2ff" target="_blank">platform.openai.com</a></li>
+        <li>Daftar, tambahkan metode pembayaran</li>
+        <li>Buat API key</li>
+        <li>Isi Model Name dengan <code>gpt-4o</code> atau <code>gpt-3.5-turbo</code></li>
+    </ol>
+
+    <h3>Opsi C: Groq (100% Gratis)</h3>
+    <ol>
+        <li>Buka <a href="https://console.groq.com/keys" style="color:#00d2ff" target="_blank">console.groq.com/keys</a></li>
+        <li>Daftar dengan Google atau GitHub</li>
+        <li>Buat API key</li>
+        <li>Isi Model Name dengan <code>llama-3.3-70b-versatile</code></li>
+        <li>Isi Base URL dengan <code>https://api.groq.com/openai/v1</code></li>
+    </ol>
+    <div class="tip-box">
+        <strong>💰 Biaya:</strong> Gratis! Tapi ada batasan permintaan per menit.
+    </div>
+
+    <h3>Mendapatkan API Key Pexels (Sumber Video Gratis)</h3>
+    <ol>
+        <li>Buka <a href="https://www.pexels.com/api/" style="color:#00d2ff" target="_blank">pexels.com/api</a></li>
+        <li>Klik "Join Pexels" atau daftar dengan Google/Facebook</li>
+        <li>Masuk ke halaman "Your API Key"</li>
+        <li>Salin key (string huruf dan angka)</li>
+        <li>Tempel di Basic Settings → Video Source Settings → Pexels API Key</li>
+    </ol>
+    <div class="tip-box">
+        <strong>💰 Biaya:</strong> Gratis! 200 permintaan per jam. Lebih dari cukup untuk penggunaan pribadi.
+    </div>
+
+    <h3>Mendapatkan API Key Pixabay (Alternatif Sumber Video Gratis)</h3>
+    <ol>
+        <li>Buka <a href="https://pixabay.com/api/docs/" style="color:#00d2ff" target="_blank">pixabay.com/api/docs</a></li>
+        <li>Daftar akun Pixabay</li>
+        <li>Masuk ke bagian "API Key"</li>
+        <li>Salin key</li>
+        <li>Tempel di Basic Settings → Pixabay API Key</li>
+    </ol>
+
+    <table>
+        <tr><th>Yang Anda butuhkan</th><th>Pilihan Minimum</th><th>Biaya</th><th>Kesulitan</th></tr>
+        <tr><td>LLM (penulisan AI)</td><td>DeepSeek</td><td><span class="tag tag-green">Kredit gratis</span></td><td><span class="tag tag-green">Mudah</span></td></tr>
+        <tr><td>Sumber Video</td><td>Pexels</td><td><span class="tag tag-green">Gratis</span></td><td><span class="tag tag-green">Mudah</span></td></tr>
+        <tr><td>TTS (Suara)</td><td>Azure TTS V1</td><td><span class="tag tag-green">Gratis, tanpa setup</span></td><td><span class="tag tag-green">Tidak perlu</span></td></tr>
+    </table>
+</div>
+
+<!-- 5 -->
+<div class="section" id="id-llm">
+    <h2>5. 🧠 Pengaturan LLM — Memilih Otak AI</h2>
+    <p>LLM (Large Language Model) adalah "otak" yang menulis naskah video Anda. Klik <strong>Basic Settings</strong> di bagian atas untuk melihat opsi LLM.</p>
+
+    <h3>Provider mana yang harus saya pilih?</h3>
+    <table>
+        <tr><th>Provider</th><th>Perlu API Key?</th><th>Perlu VPN?</th><th>Biaya</th><th>Terbaik Untuk</th></tr>
+        <tr><td>DeepSeek</td><td>✅ Ya</td><td>❌ Tidak</td><td>💰 Kredit gratis + murah</td><td>🇮🇩 Pengguna Indonesia (tanpa VPN)</td></tr>
+        <tr><td>OpenAI</td><td>✅ Ya</td><td>✅ Ya</td><td>💵 Berbayar</td><td>Kualitas terbaik, perlu VPN</td></tr>
+        <tr><td>Groq</td><td>✅ Ya</td><td>❌ Tidak</td><td>🎁 Gratis</td><td>Gratis & cepat</td></tr>
+        <tr><td>Gemini</td><td>✅ Ya</td><td>❌ Tidak*</td><td>🎁 Gratis</td><td>Gratis dari Google</td></tr>
+        <tr><td>Ollama</td><td>❌ Tidak</td><td>❌ Tidak</td><td>🏠 100% Gratis</td><td>Jalankan di PC sendiri</td></tr>
+        <tr><td>Moonshot</td><td>✅ Ya</td><td>❌ Tidak</td><td>💰 Kredit gratis</td><td>Berbasis China, tanpa VPN</td></tr>
+        <tr><td>AIHubMix</td><td>✅ Ya</td><td>❌ Tidak</td><td>💵 Berbayar</td><td>Akses 700+ model</td></tr>
+    </table>
+
+    <h3>Apa yang harus diisi di form:</h3>
+    <ul>
+        <li><strong>LLM Provider:</strong> Pilih dari dropdown (misal DeepSeek)</li>
+        <li><strong>API Key:</strong> Tempel key Anda di sini (biasanya diawali <code>sk-</code>)</li>
+        <li><strong>Base URL:</strong> Alamat API (kebanyakan provider sudah punya nilai default)</li>
+        <li><strong>Model Name:</strong> Model AI yang digunakan (misal <code>deepseek-chat</code>, <code>gpt-4o</code>)</li>
+    </ul>
+
+    <div class="warn-box">
+        <strong>⚠️ Penting:</strong> Setiap provider punya format sendiri! Jika memilih OpenAI, jangan tempel key DeepSeek di sana. Pastikan memilih provider yang benar terlebih dahulu.
+    </div>
+</div>
+
+<!-- 6 -->
+<div class="section" id="id-script">
+    <h2>6. 📝 Pengaturan Naskah Video — Menulis dengan AI</h2>
+    <p>Ini adalah panel kiri. Di sini Anda mengatur bagaimana AI menulis naskah video.</p>
+
+    <h3>Topik Video</h3>
+    <p>Ketik topik video Anda. Semakin spesifik semakin baik:</p>
+    <ul>
+        <li>❌ Kurang baik: "AI"</li>
+        <li>✅ Baik: "10 Alat AI Teratas yang Akan Mengubah Hidup Anda di 2026"</li>
+        <li>✅ Baik: "Cara Membuat Kue Coklat Sempurna dalam 5 Menit"</li>
+    </ul>
+
+    <h3>Bahasa Naskah</h3>
+    <p>Pilih bahasa untuk naskah yang ditulis AI. "Auto Detect" membiarkan AI memutuskan berdasarkan topik Anda. Atau pilih bahasa spesifik seperti Indonesia, Inggris, Mandarin, dll.</p>
+
+    <h3>Pengaturan Naskah Lanjutan</h3>
+    <p>Klik untuk memperluas. Di sini Anda bisa:</p>
+    <ul>
+        <li><strong>Jumlah Paragraf Naskah:</strong> Berapa paragraf (1-3). Untuk video pendek (30-60 detik), 1 paragraf sudah cukup.</li>
+        <li><strong>Kebutuhan Kustom Naskah:</strong> Instruksi khusus untuk AI. Contoh:
+            <ul>
+                <li>"Gunakan nada lucu dan santai"</li>
+                <li>"Buat cocok untuk TikTok, jaga ritme cepat"</li>
+                <li>"Target audiens muda usia 18-25 tahun"</li>
+            </ul>
+        </li>
+        <li><strong>Gunakan System Prompt Kustom:</strong> Untuk pengguna tingkat lanjut. Mengganti instruksi AI default sepenuhnya.</li>
+    </ul>
+
+    <h3>Generate Naskah & Kata Kunci</h3>
+    <p>Klik tombol ini untuk membiarkan AI menulis naskah DAN menyarankan kata kunci untuk mencari klip video.</p>
+
+    <h3>Area Teks Naskah Video</h3>
+    <p>Naskah yang dibuat AI muncul di sini. Anda bisa mengeditnya secara manual jika ingin mengubah sesuatu.</p>
+
+    <h3>Kata Kunci Video</h3>
+    <p>Ini adalah kata-kata yang digunakan aplikasi untuk mencari klip video di Pexels/Pixabay. AI menghasilkannya, tapi Anda bisa mengeditnya. Gunakan <strong>koma bahasa Inggris</strong> sebagai pemisah: <code>AI technology, robot, future</code>.</p>
+</div>
+
+<!-- 7 -->
+<div class="section" id="id-video">
+    <h2>7. 🎬 Pengaturan Video — Kustomisasi Tampilan</h2>
+    <p>Panel tengah mengatur tampilan video Anda.</p>
+
+    <h3>Sumber Video</h3>
+    <ul>
+        <li><strong>Pexels</strong> (disarankan): Video stok HD gratis. Perlu API key.</li>
+        <li><strong>Pixabay:</strong> Alternatif video stok gratis. Perlu API key.</li>
+        <li><strong>File lokal:</strong> Unggah video atau gambar sendiri dari komputer.</li>
+        <li><strong>TikTok / Bilibili / Xiaohongshu:</strong> Belum tersedia.</li>
+    </ul>
+
+    <h3>Mode Penggabungan Video</h3>
+    <ul>
+        <li><strong>Acak:</strong> Klip video ditampilkan dalam urutan acak. Lebih bervariasi.</li>
+        <li><strong>Berurutan:</strong> Klip mengikuti urutan yang sama saat ditemukan.</li>
+    </ul>
+
+    <h3>Mode Transisi Video</h3>
+    <p>Bagaimana satu klip berubah ke klip berikutnya:</p>
+    <ul>
+        <li><strong>None:</strong> Potongan langsung (tanpa efek)</li>
+        <li><strong>Shuffle:</strong> Efek transisi acak</li>
+        <li><strong>FadeIn / FadeOut:</strong> Muncul/hilang perlahan</li>
+        <li><strong>SlideIn / SlideOut:</strong> Geser masuk/keluar</li>
+    </ul>
+
+    <h3>Rasio Video</h3>
+    <ul>
+        <li><strong>Potret 9:16</strong> — Untuk TikTok, Instagram Reels, YouTube Shorts</li>
+        <li><strong>Lanskap 16:9</strong> — Untuk video YouTube, presentasi</li>
+    </ul>
+
+    <h3>Durasi Klip</h3>
+    <p>Berapa lama setiap klip video diputar. 3-5 detik disarankan untuk video pendek yang cepat.</p>
+
+    <h3>Jumlah Video</h3>
+    <p>Hasilkan 1 hingga 5 video sekaligus. Setiap video akan memiliki klip dan musik yang sedikit berbeda.</p>
+
+    <h3>Pengaturan Video Lanjutan</h3>
+    <p><strong>Encoder Video:</strong> Pilih antara:</p>
+    <ul>
+        <li><code>libx264 (CPU)</code> — Bekerja di mana saja, lebih lambat tapi aman</li>
+        <li><code>h264_nvenc (NVIDIA)</code> — Jauh lebih cepat jika punya GPU NVIDIA</li>
+        <li><code>h264_amf (AMD)</code> — Lebih cepat dengan kartu grafis AMD</li>
+        <li><code>h264_qsv (Intel)</code> — Lebih cepat dengan grafis terintegrasi Intel</li>
+    </ul>
+    <div class="tip-box">
+        <strong>💡 Tip:</strong> Jika tidak yakin, biarkan sebagai <strong>libx264</strong>. Ini bekerja di semua sistem.
+    </div>
+</div>
+
+<!-- 8 -->
+<div class="section" id="id-audio">
+    <h2>8. 🔊 Pengaturan Audio — Suara & Musik</h2>
+    <p>Masih di panel tengah, di bawah Pengaturan Video.</p>
+
+    <h3>Server TTS (Text-to-Speech)</h3>
+    <p>Ini yang membacakan naskah Anda dengan suara. Pilihan:</p>
+    <ul>
+        <li><strong>Azure TTS V1 (Default)</strong> — ✅ Gratis, tanpa setup. Kualitas bagus.</li>
+        <li><strong>Azure TTS V2</strong> — Kualitas lebih baik, tapi perlu API key Azure + region.</li>
+        <li><strong>SiliconFlow TTS</strong> — Alternatif TTS, perlu API key dari SiliconFlow.</li>
+        <li><strong>Google Gemini TTS</strong> — Menggunakan API key Gemini Anda. Kualitas bagus.</li>
+        <li><strong>Xiaomi MiMo TTS</strong> — Dari Xiaomi, perlu API key MiMo.</li>
+        <li><strong>Tanpa Suara</strong> — Lewati narasi (video akan diam atau hanya pakai BGM).</li>
+    </ul>
+
+    <h3>Suara Sintesis</h3>
+    <p>Pilih suara. Suara yang tersedia tergantung pada server TTS Anda. Untuk Azure TTS V1, Anda bisa memilih dari banyak bahasa dan gender.</p>
+
+    <h3>Volume & Kecepatan Suara</h3>
+    <ul>
+        <li><strong>Volume:</strong> 1.0 normal. Turunkan untuk narasi latar.</li>
+        <li><strong>Kecepatan:</strong> 1.0 kecepatan normal. 1.2 sedikit lebih cepat.</li>
+    </ul>
+
+    <h3>File Audio Kustom</h3>
+    <p>Unggah audio Anda sendiri (MP3, WAV, dll.). Jika mengunggah, suara TTS akan dilewati dan audio Anda digunakan langsung.</p>
+
+    <h3>Musik Latar</h3>
+    <ul>
+        <li><strong>Tanpa Musik Latar:</strong> Hanya narasi, tanpa BGM.</li>
+        <li><strong>Musik Latar Acak:</strong> Aplikasi memilih lagu acak dari track bawaan.</li>
+        <li><strong>Musik Latar Kustom:</strong> Ketik nama file (letakkan MP3 Anda di folder <code>resource/songs</code>).</li>
+    </ul>
+    <div class="tip-box">
+        <strong>🎵 Tip musik:</strong> Jaga volume musik latar di <strong>0.2-0.3</strong> agar narasi tetap jelas dan mudah didengar.
+    </div>
+</div>
+
+<!-- 9 -->
+<div class="section" id="id-subtitle">
+    <h2>9. 📝 Pengaturan Subtitle — Menambahkan Teks</h2>
+    <p>Panel kanan mengontrol subtitle (teks yang muncul di layar).</p>
+
+    <h3>Aktifkan Subtitle</h3>
+    <p>Nyalakan atau matikan subtitle. Jika mati, pengaturan lainnya di bawah tidak berpengaruh.</p>
+
+    <h3>Font Subtitle</h3>
+    <p>Pilih dari font yang tersedia. Aplikasi sudah dilengkapi beberapa font bawaan.</p>
+
+    <h3>Posisi Subtitle</h3>
+    <ul>
+        <li><strong>Bawah:</strong> Paling umum — subtitle di bagian bawah layar.</li>
+        <li><strong>Tengah:</strong> Di tengah (bagus untuk menonjolkan kata kunci).</li>
+        <li><strong>Atas:</strong> Di bagian atas.</li>
+        <li><strong>Kustom:</strong> Pilih persentase dari atas (misal 70% = dekat bawah).</li>
+    </ul>
+
+    <h3>Ukuran Font & Warna</h3>
+    <ul>
+        <li><strong>Ukuran Font:</strong> 30 (kecil) hingga 100 (besar). 60 adalah default yang baik.</li>
+        <li><strong>Warna Font:</strong> Pilih warna apapun. Putih (#FFFFFF) paling aman.</li>
+        <li><strong>Warna & Ketebalan Garis Tepi:</strong> Menambahkan border di sekitar teks agar mudah terbaca.</li>
+    </ul>
+
+    <h3>Latar Belakang Subtitle</h3>
+    <p>Aktifkan latar belakang di belakang teks agar terbaca meskipun di video yang terang.</p>
+    <ul>
+        <li><strong>Warna Latar:</strong> Biasanya hitam (#000000) dengan transparansi.</li>
+        <li><strong>Latar Membulat:</strong> Membuat latar belakang berbentuk pil, bukan persegi panjang.</li>
+    </ul>
+</div>
+
+<!-- 10 -->
+<div class="section" id="id-generate">
+    <h2>10. 🚀 Membuat dan Mendownload Video</h2>
+
+    <h3>Sebelum Mengklik Generate</h3>
+    <p>Ceklis:</p>
+    <ul>
+        <li>✅ API key LLM sudah diisi (Basic Settings)</li>
+        <li>✅ API key Sumber Video sudah diisi (Pexels atau Pixabay)</li>
+        <li>✅ Topik atau naskah video sudah dimasukkan</li>
+        <li>✅ Koneksi internet berfungsi</li>
+    </ul>
+
+    <h3>Klik "Generate Video"</h3>
+    <p>Tombol besar di bagian bawah. Proses memakan waktu 1-5 menit tergantung panjang video dan kecepatan internet.</p>
+
+    <h3>Apa yang terjadi selama pembuatan:</h3>
+    <ol>
+        <li>Aplikasi memanggil LLM untuk menulis naskah (jika belum ada)</li>
+        <li>Aplikasi mencari klip video di Pexels/Pixabay</li>
+        <li>Aplikasi membuat audio narasi menggunakan TTS</li>
+        <li>Aplikasi menggabungkan semuanya — klip, audio, subtitle, musik</li>
+        <li>Aplikasi merender file MP4 video akhir</li>
+    </ol>
+
+    <h3>Setelah pembuatan selesai</h3>
+    <p>Anda akan melihat pemutar video. Anda bisa menonton video langsung di browser. Video juga disimpan di folder <code>storage/tasks/</code> di server Anda.</p>
+</div>
+
+<!-- 11 -->
+<div class="section" id="id-tips">
+    <h2>11. 💡 Tips Pro & Praktik Terbaik</h2>
+
+    <h3>Menulis Topik yang Baik</h3>
+    <ul>
+        <li>Spesifik: "Cara membuat kue coklat" lebih baik dari "Kue"</li>
+        <li>Sertakan angka: "5 Tips Teratas" lebih menarik dari "Tips"</li>
+        <li>Tambahkan target: "Untuk pemula" atau "Di tahun 2026" membantu AI fokus</li>
+    </ul>
+
+    <h3>Mendapatkan Suara Narasi Lebih Baik</h3>
+    <ul>
+        <li>Jaga naskah antara 50-100 kata untuk video 30 detik</li>
+        <li>Gunakan kalimat sederhana — AI membacanya lebih natural</li>
+        <li>Tambahkan tanda baca (titik, koma) — membantu TTS terdengar alami</li>
+        <li>Coba suara yang berbeda — beberapa terdengar lebih natural dari yang lain</li>
+    </ul>
+
+    <h3>Tips Kualitas Video</h3>
+    <ul>
+        <li>Gunakan <strong>Pexels</strong> sebagai sumber video — kualitas klip terbaik</li>
+        <li>Atur durasi klip ke 4 detik — tidak terlalu pendek, tidak terlalu panjang</li>
+        <li>Gunakan <strong>transisi acak</strong> untuk tampilan profesional</li>
+        <li>Jaga volume musik latar di 20-30%</li>
+        <li>Aktifkan subtitle — banyak penonton menonton tanpa suara</li>
+    </ul>
+
+    <h3>Strategi Batch Generation</h3>
+    <p>Atur "Jumlah Video" ke 3-5 untuk membuat beberapa versi. Setiap versi akan memiliki klip dan musik berbeda. Posting di berbagai platform untuk melihat mana yang paling baik.</p>
+
+    <h3>Menghemat Waktu</h3>
+    <ul>
+        <li>Simpan API key Anda — aplikasi akan mengingatnya</li>
+        <li>Gunakan ulang naskah — edit sedikit untuk video baru</li>
+        <li>Gunakan pengaturan yang sama — setelah menemukan yang cocok, pertahankan</li>
+    </ul>
+</div>
+
+<!-- 12 -->
+<div class="section" id="id-trouble">
+    <h2>12. 🔧 Pemecahan Masalah — Masalah Umum</h2>
+
+    <h3>"Please Enter the LLM API Key"</h3>
+    <p>Buka Basic Settings, pastikan Anda sudah memilih LLM Provider dan memasukkan API key yang valid.</p>
+
+    <h3>"Please Enter the Pexels API Key"</h3>
+    <p>Buka Basic Settings → Video Source Settings, masukkan API key Pexels Anda. Dapatkan gratis di pexels.com/api.</p>
+
+    <h3>Pembuatan video gagal / macet</h3>
+    <ul>
+        <li>Periksa koneksi internet Anda</li>
+        <li>Pastikan API key Anda benar</li>
+        <li>Coba topik video yang lebih pendek dengan lebih sedikit kata kunci</li>
+        <li>Kurangi "Jumlah Video" menjadi 1</li>
+        <li>Periksa panel log — ini menunjukkan apa yang terjadi di belakang layar</li>
+    </ul>
+
+    <h3>Subtitle tidak muncul</h3>
+    <p>Pastikan "Enable Subtitles" dicentang di panel kanan.</p>
+
+    <h3>Tidak ada suara / audio</h3>
+    <ul>
+        <li>Periksa server TTS sudah dipilih (bukan "Tanpa Suara")</li>
+        <li>Pastikan Anda memilih suara di "Speech Synthesis"</li>
+        <li>Periksa volume suara tidak diatur ke 0</li>
+    </ul>
+
+    <h3>Klip video tidak ditemukan</h3>
+    <ul>
+        <li>Kata kunci Anda mungkin terlalu spesifik. Coba istilah yang lebih umum.</li>
+        <li>Periksa API key Pexels/Pixabay Anda valid.</li>
+        <li>Ganti ke sumber video yang berbeda.</li>
+    </ul>
+
+    <h3>Pesan "Error from LLM"</h3>
+    <ul>
+        <li>API key Anda mungkin tidak valid atau kedaluwarsa</li>
+        <li>Kredit Anda mungkin habis</li>
+        <li>Server provider mungkin down — coba provider lain</li>
+    </ul>
+</div>
+
+<!-- 13 -->
+<div class="section" id="id-faq">
+    <h2>13. ❓ Pertanyaan yang Sering Diajukan</h2>
+
+    <h3>Apakah alat ini gratis?</h3>
+    <p>Perangkat lunaknya 100% gratis dan open source. Tapi Anda perlu API key untuk layanan AI. DeepSeek memberikan kredit gratis, Pexels gratis, dan Azure TTS V1 gratis. Jadi Anda bisa menggunakannya secara gratis!</p>
+
+    <h3>Video apa saja yang bisa saya buat?</h3>
+    <p>Video pendek (30-90 detik) untuk TikTok, Instagram Reels, YouTube Shorts, konten edukasi, ringkasan berita, review produk, tips & trik, dan lainnya.</p>
+
+    <h3>Apakah saya perlu bisa coding?</h3>
+    <p>Tidak! Aplikasi ini memiliki antarmuka web yang mudah digunakan. Cukup isi field dan klik tombol.</p>
+
+    <h3>Bisakah saya menggunakan klip video sendiri?</h3>
+    <p>Ya. Pilih "Local file" sebagai Sumber Video dan unggah file MP4, MOV, atau gambar Anda.</p>
+
+    <h3>Bisakah saya menggunakan musik sendiri?</h3>
+    <p>Ya. Letakkan file MP3 Anda di folder <code>resource/songs</code>, lalu ketik nama file di "Custom Background Music File".</p>
+
+    <h3>Berapa banyak video yang bisa saya buat per hari?</h3>
+    <p>Tidak terbatas! Tidak ada batasan di perangkat lunak. Tapi layanan API gratis memiliki batas (misal Pexels mengizinkan 200 permintaan/jam).</p>
+
+    <h3>Bisakah saya mengedit video setelah dibuat?</h3>
+    <p>Aplikasi ini membuat file video akhir. Anda bisa download MP4 dan mengeditnya lebih lanjut di software editing video apapun.</p>
+
+    <h3>Apakah data saya pribadi?</h3>
+    <p>Ya. Semuanya berjalan di server/Docker Anda sendiri. API key Anda tetap di komputer Anda. Tidak ada yang dikirim ke pihak ketiga kecuali panggilan API ke LLM dan Pexels/Pixabay.</p>
+</div>
+
+</div> <!-- end Indonesia -->
+
+</div> <!-- end container -->
+
+<footer class="footer">
+    <p>MoneyPrinterTurbo Guide v1.0 — <a href="https://github.com/harry0703/MoneyPrinterTurbo" style="color:#00d2ff; text-decoration:none;" target="_blank">GitHub Repository</a></p>
+</footer>
+
+<script>
+// Language switcher
+function switchLang(lang) {
+    document.querySelectorAll('.lang-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.lang-tab').forEach(el => el.classList.remove('active'));
+    document.getElementById('lang-' + lang).classList.add('active');
+    document.querySelector(`.lang-tab[onclick*="'${lang}'"]`).classList.add('active');
+    // Store preference
+    localStorage.setItem('guideLang', lang);
+}
+
+// Auto-select language based on saved preference
+const savedLang = localStorage.getItem('guideLang');
+if (savedLang === 'id') { switchLang('id'); }
+</script>
+
+</body>
+</html>
